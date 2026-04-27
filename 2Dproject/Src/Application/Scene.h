@@ -1,12 +1,14 @@
 #pragma once
-#include"Scenes/SceneManager.h"
-
 
 class Scene
 {
 private:
 
-	C_SceneManager m_sceneManager;
+	// テクスチャ ・・・ 画像データ
+	KdTexture charaTex;
+
+	// 行列 ・・・ 座標などの情報
+	Math::Matrix matrix;
 
 public:
 
@@ -15,6 +17,9 @@ public:
 
 	// 解放
 	void Release();
+
+	// 前更新
+	void PreUpdate();
 
 	// 更新処理
 	void Update();
@@ -28,7 +33,6 @@ public:
 private:
 
 	Scene() {}
-
 
 public:
 	static Scene& GetInstance()

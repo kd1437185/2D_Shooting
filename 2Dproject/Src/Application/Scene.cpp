@@ -1,25 +1,38 @@
 #include "main.h"
 #include "Scene.h"
 
+#include"Scene/SceneManager.h"
+
 void Scene::Draw2D()
 {
-	m_sceneManager.Draw();
+	SceneManager::Instance().Draw();
 }
+
+//==============’Ç‰Á====================
+
+void Scene::PreUpdate()
+{
+	SceneManager::Instance().PreUpdate();
+}
+
+//======================================
 
 void Scene::Update()
 {
-	m_sceneManager.Update();
+	SceneManager::Instance().Update();
 }
 
 void Scene::Init()
 {
-	m_sceneManager.Init();
+	
 }
 
 void Scene::Release()
 {
-	m_sceneManager.Release();
+
 }
+
+
 
 void Scene::ImGuiUpdate()
 {
@@ -32,8 +45,6 @@ void Scene::ImGuiUpdate()
 	if (ImGui::Begin("Debug Window"))
 	{
 		ImGui::Text("FPS : %d", APP.m_fps);
-
-		m_sceneManager.ImGuiUpdate();
 	}
 	ImGui::End();
 }

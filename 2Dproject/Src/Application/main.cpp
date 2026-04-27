@@ -198,6 +198,13 @@ void Application::Execute()
 		// Zバッファクリア
 		D3D.GetDevContext()->ClearDepthStencilView(D3D.GetZBuffer(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
 
+		//================追加=================
+
+		// ゲーム前更新処理
+		SCENE.PreUpdate();
+
+		//=====================================
+
 		// ゲーム更新処理
 		SCENE.Update();
 
