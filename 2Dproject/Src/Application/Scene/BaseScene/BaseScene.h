@@ -8,10 +8,10 @@ public:
 	BaseScene(){}
 	virtual ~BaseScene(){}
 
-	virtual void Init();
-	virtual void Update();
-	virtual void Draw();
-	virtual void Release();
+	virtual void Init() = 0;
+	virtual void Update() = 0;
+	virtual void Draw() = 0;
+	virtual void Release() = 0;
 
 private:
 

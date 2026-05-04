@@ -48,7 +48,8 @@ private:
 	SceneType m_currentSceneType = SceneType::Title;
 
 	// 次のシーンを管理するフラグ変数
-	SceneType m_nextSceneType = m_currentSceneType;
+	//SceneType m_nextSceneType = m_currentSceneType;
+	SceneType m_nextSceneType = SceneType::Title;
 
 // シングルトンパターン
 private:
@@ -56,6 +57,11 @@ private:
 	// 外で変数宣言できない
 	SceneManager() { Init(); }
 	~SceneManager() { Release(); }
+
+	// コピー代入演算子の禁止
+	// プログラムによる自動生成の阻止
+	SceneManager(const SceneManager&) = delete;
+	SceneManager& operator=(const SceneManager&) = delete;
 
 public:
 

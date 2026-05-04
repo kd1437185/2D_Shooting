@@ -22,8 +22,6 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	// ポリモーフィズム
-	// 同じ関数名であっても、呼び出すオブジェクトによって処理内容が変わること
 	m_currentScene->Draw();
 }
 
@@ -34,14 +32,25 @@ void SceneManager::Init()
 
 void SceneManager::Release()
 {
-	m_currentScene->Release();
+	if (m_currentScene)
+	{
+		m_currentScene->Release();
+		m_currentScene = nullptr;
+	}
 }
 
 void SceneManager::ChangeScene(SceneType _sceneType)
 {
+	// 旧シーンを解放
+	if (m_currentScene)
+	{
+		m_currentScene->Release();
+		m_currentScene = nullptr;
+	}
+
 	// ①次のシーンを作成し、②フラグを更新する
 
-	// ①
+	// ①新しいシーンを生成して初期化
 	switch (_sceneType)
 	{
 	case SceneType::Title:
@@ -52,11 +61,14 @@ void SceneManager::ChangeScene(SceneType _sceneType)
 		// アップキャスト
 		m_currentScene = std::make_shared<GameScene>();
 		break;
+	default:(false && "Unknown SceneType");
+		return;
 	}
 
 	// 初期化（コンストラクタでInitしないなら）
+	m_currentScene->Init();
 
-
-	// ②
+	// ②フラグ更新
 	m_currentSceneType = _sceneType;
+	m_nextSceneType = _sceneType;
 }

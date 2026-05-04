@@ -5,17 +5,22 @@
 void TitleScene::Init()
 {
 	m_BackTex.Load("Texture/TitleScene/title.png");
+	// ”wŒi
+	m_BackMat = Math::Matrix::CreateTranslation(0, 0, 0);
 }
 
 void TitleScene::Update()
 {
-	if (GetAsyncKeyState(VK_RETURN) & 0x8000)
+	// ‰Ÿ‚µ‚½uŠÔ‚¾‚¯ƒV[ƒ“‘JˆÚ
+	bool nowEnter = GetAsyncKeyState(VK_RETURN) & 0x8000;
+
+	if (nowEnter && !m_prevEnter)
 	{
 		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Game);
 	}
 
-	// ”wŒi
-	m_BackMat = Math::Matrix::CreateTranslation(0, 0, 0);
+	m_prevEnter = nowEnter;
+
 }
 
 void TitleScene::Draw()

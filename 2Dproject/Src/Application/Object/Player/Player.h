@@ -2,11 +2,13 @@
 
 #include "../BaseObject.h"
 
+class Bullet;   // 前方宣言
+
 class Player : public BaseObject
 {
 public:
 
-	Player() { Init(); }
+	Player() {}
 	~Player() override{}
 
 	void Init() override;
@@ -15,6 +17,10 @@ public:
 	void Release() override;
 
 private:
+	void Shot();
 
-	Math::Matrix m_playerMat;
+	std::vector<std::shared_ptr<Bullet>> m_Bullets;
+
+	// 弾を撃つ(Zキー)瞬間判定用
+	bool m_prevZ = false;
 };

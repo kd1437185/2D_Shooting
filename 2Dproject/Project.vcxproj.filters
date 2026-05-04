@@ -61,6 +61,15 @@
     <Filter Include="Src\Application\Object\Player">
       <UniqueIdentifier>{167eb900-8cf5-4574-97f3-6953e0d841f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Enemy">
+      <UniqueIdentifier>{b7721bb3-22ad-4d5c-b3f6-de5e57cc04ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Enemy\MobEnemy">
+      <UniqueIdentifier>{5c04faf1-9b0f-4cb8-9dcb-ed41fdfeff17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Bullet">
+      <UniqueIdentifier>{e5196cf8-c045-4af5-9511-f7f2edd858e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -174,6 +183,15 @@
     <ClInclude Include="Src\Application\Object\Player\Player.h">
       <Filter>Src\Application\Object\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.h">
+      <Filter>Src\Application\Object\Enemy\MobEnemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\AppConst.h">
+      <Filter>Src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Bullet\Bullet.h">
+      <Filter>Src\Application\Object\Bullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -256,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Player\Player.cpp">
       <Filter>Src\Application\Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.cpp">
+      <Filter>Src\Application\Object\Enemy\MobEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp">
+      <Filter>Src\Application\Object\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,5 +19,7 @@ private:
 	KdTexture m_BackTex;
 	Math::Matrix m_BackMat;
 
+	// ‰Ÿ‚µ‚½uŠÔ”»’è—p
+	bool m_prevEnter = false;
 };
 
