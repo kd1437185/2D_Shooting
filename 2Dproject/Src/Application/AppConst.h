@@ -37,4 +37,11 @@ namespace AppConst
     static const float SCORE_X = 50.0f;  // 左上からのX位置（調整可）
     static const float SCORE_Y = 30.0f;  // 左上からのY位置（調整可）
 
+    // タイトル画面
+    static const int   TEXT_W = 256;   // テキスト画像の幅
+    static const int   TEXT_H = 64;    // テキスト画像の高さ
+    static const int   BLINK_INTERVAL = 30;    // 点滅間隔（フレーム数）
+    static const float PRESS_ENTER_Y = 200.0f; // 画面下からの距離（調整可）
+    static const float MENU_START_Y = 200.0f; // メニューのY位置（調整可）
+
 }
