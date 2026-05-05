@@ -16,6 +16,9 @@ public:
 	void Draw() override;
 	void Release() override;
 
+	// GameScene から弾リストを取得して当たり判定に使う
+	std::vector<std::shared_ptr<Bullet>>& GetBullets() { return m_Bullets; }
+
 private:
 	void Shot();
 
@@ -23,4 +26,5 @@ private:
 
 	// 弾を撃つ(Zキー)瞬間判定用
 	bool m_prevZ = false;
+
 };

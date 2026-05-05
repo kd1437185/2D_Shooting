@@ -70,6 +70,12 @@
     <Filter Include="Src\Application\Object\Bullet">
       <UniqueIdentifier>{e5196cf8-c045-4af5-9511-f7f2edd858e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Collision">
+      <UniqueIdentifier>{501a2be9-c157-4aea-9e48-cd1cfab1aafa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Score">
+      <UniqueIdentifier>{ebbf9c0d-8177-4936-8e32-8672b6ff9ece}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -192,6 +198,12 @@
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h">
       <Filter>Src\Application\Object\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Collision\CollisionManager.h">
+      <Filter>Src\Application\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Score\ScoreManager.h">
+      <Filter>Src\Application\Score</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -280,6 +292,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp">
       <Filter>Src\Application\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Collision\CollisionManager.cpp">
+      <Filter>Src\Application\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Score\ScoreManager.cpp">
+      <Filter>Src\Application\Score</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

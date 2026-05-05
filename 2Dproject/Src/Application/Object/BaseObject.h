@@ -15,6 +15,9 @@ public:
 
 	// 外部から座標をセットする
 	void SetPos(Math::Vector2 _pos) { m_pos = _pos; }
+	Math::Vector2 GetPos()     const { return m_pos; }
+	bool IsAlive()             const { return m_aliveFlg; }
+	void SetAlive(bool _alive) { m_aliveFlg = _alive; }
 
 protected:
 

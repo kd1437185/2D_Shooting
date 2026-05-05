@@ -19,10 +19,17 @@ void Player::Init()
 void Player::Update()
 {
 	// 移動
-	if (GetAsyncKeyState(VK_LEFT) & 0x8000) m_pos.x -= AppConst::PLAYER_SPEED;
-	if (GetAsyncKeyState(VK_RIGHT) & 0x8000) m_pos.x += AppConst::PLAYER_SPEED;
-	if (GetAsyncKeyState(VK_UP) & 0x8000) m_pos.y += AppConst::PLAYER_SPEED;
-	if (GetAsyncKeyState(VK_DOWN) & 0x8000) m_pos.y -= AppConst::PLAYER_SPEED;
+	if (GetAsyncKeyState(VK_LEFT)	& 0x8000)	m_pos.x -= AppConst::PLAYER_SPEED;
+	if (GetAsyncKeyState(VK_RIGHT)	& 0x8000)	m_pos.x += AppConst::PLAYER_SPEED;
+	if (GetAsyncKeyState(VK_UP)		& 0x8000)	m_pos.y += AppConst::PLAYER_SPEED;
+	if (GetAsyncKeyState(VK_DOWN)	& 0x8000)	m_pos.y -= AppConst::PLAYER_SPEED;
+
+	// 画面外に出ないようにクランプ
+	float halfSize = AppConst::PLAYER_SIZE / 2.0f;
+	if (m_pos.x < -AppConst::SCREEN_HALF_W + halfSize) m_pos.x = -AppConst::SCREEN_HALF_W + halfSize;
+	if (m_pos.x > AppConst::SCREEN_HALF_W - halfSize) m_pos.x = AppConst::SCREEN_HALF_W - halfSize;
+	if (m_pos.y < -AppConst::SCREEN_HALF_H + halfSize) m_pos.y = -AppConst::SCREEN_HALF_H + halfSize;
+	if (m_pos.y > AppConst::SCREEN_HALF_H - halfSize) m_pos.y = AppConst::SCREEN_HALF_H - halfSize;
 
 	// Zキーで発射（押した瞬間）
 	bool nowZ = GetAsyncKeyState('Z') & 0x8000;

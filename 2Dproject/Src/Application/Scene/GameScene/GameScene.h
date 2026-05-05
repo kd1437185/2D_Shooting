@@ -3,6 +3,7 @@
 #include "../BaseScene/BaseScene.h"
 
 class BaseObject;
+class Player;
 
 class GameScene : public BaseScene
 {
@@ -21,7 +22,7 @@ private:
 	KdTexture		m_BackTex;
 	Math::Matrix	m_BackMat;
 
-	std::shared_ptr<BaseObject> m_player = nullptr;
+	std::shared_ptr<Player> m_player = nullptr;
 	std::vector<std::shared_ptr<BaseObject>> m_Enemies;	// •¡”‘Î‰
 
 	bool m_prevSpace = false;

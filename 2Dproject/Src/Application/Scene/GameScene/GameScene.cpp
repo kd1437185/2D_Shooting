@@ -1,15 +1,20 @@
 #include "GameScene.h"
-#include "../../AppConst.h"
 #include "../../Object/Player/Player.h"
-#include "Application/Object/Enemy/MobEnemy/MobEnemy.h"
-
+#include "../../Object/Enemy/MobEnemy/MobEnemy.h"
+#include "../../Collision/CollisionManager.h"
+#include "../../Object/Bullet/Bullet.h"
 #include "../SceneManager.h"
+#include "../../Score/ScoreManager.h"
+#include "../../AppConst.h"
 
 void GameScene::Init()
 {
-	m_BackTex.Load("Texture/GameScene/game.png");
 	// 背景
+	m_BackTex.Load("Texture/GameScene/game.png");
 	m_BackMat = Math::Matrix::CreateTranslation(0, 0, 0);
+
+	// スコア
+	ScoreManager::Instance().Init();
 
 	// プレイヤー
 	m_player = std::make_shared<Player>();
@@ -50,13 +55,18 @@ void GameScene::Update()
 	// モブエネミー
 	for (auto& e : m_Enemies)
 	{
-		if (e)
 		{
-			e->Update();
+			if (e && e->IsAlive()) e->Update(); // IsAlive() チェック追加
 		}
 	}
 
-	
+	// 当たり判定
+	if (m_player)
+	{
+		auto& bullets = m_player->GetBullets();
+		CollisionManager::CheckBulletsVsEnemies(bullets, m_Enemies);
+	}
+
 }
 
 void GameScene::Draw()
@@ -74,16 +84,20 @@ void GameScene::Draw()
 	// モブエネミー
 	for (auto& e : m_Enemies)
 	{
-		if (e)
-		{
-			e->Draw();
-		}
+		if (e && e->IsAlive()) e->Draw(); // IsAlive() チェック追加
 	}
+
+	// スコア
+	ScoreManager::Instance().Draw();
+
 }
 
 void GameScene::Release()
 {
 	m_BackTex.Release();
+
+	// スコア
+	ScoreManager::Instance().Release();
 
 	if (m_player)
 	{
