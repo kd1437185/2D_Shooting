@@ -2,8 +2,11 @@
 
 #include "../BaseScene/BaseScene.h"
 
+#include "../../Background/ScrollBackground.h"
+
 class BaseObject;
 class Player;
+class Boss;
 
 class GameScene : public BaseScene
 {
@@ -19,11 +22,11 @@ public:
 private:
 
 	// ƒQ[ƒ€‰æ–Ê”wŒi
-	KdTexture		m_BackTex;
-	Math::Matrix	m_BackMat;
+	ScrollBackground m_background;
 
 	std::shared_ptr<Player> m_player = nullptr;
 	std::vector<std::shared_ptr<BaseObject>> m_Enemies;	// •¡”‘Î‰
+	std::shared_ptr<Boss> m_boss = nullptr;
 
 	bool m_prevSpace = false;
 

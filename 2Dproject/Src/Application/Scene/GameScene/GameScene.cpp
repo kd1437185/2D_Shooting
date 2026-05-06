@@ -3,18 +3,19 @@
 #include "../../Object/Enemy/MobEnemy/MobEnemy.h"
 #include "../../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
 #include "../../Object/Enemy/TankEnemy/TankEnemy.h"
+#include "../../Object/Enemy/Boss/Boss.h"
 #include "../../Collision/CollisionManager.h"
 #include "../../Object/Bullet/Bullet.h"
 #include "../SceneManager.h"
 #include "../../Score/ScoreManager.h"
 #include "../../AppConst.h"
 #include "../../Wave/WaveManager.h"
+#include "../../Health/HealthManager.h"
 
 void GameScene::Init()
 {
 	// 背景
-	m_BackTex.Load("Texture/GameScene/game.png");
-	m_BackMat = Math::Matrix::CreateTranslation(0, 0, 0);
+	m_background.Init();
 
 	// スコア
 	ScoreManager::Instance().Init();
@@ -61,6 +62,12 @@ void GameScene::Init()
 
 	m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
 	m_tankSpawnedCount = 0;
+
+	// Boss を生成（非アクティブ状態）
+	m_boss = std::make_shared<Boss>();
+	m_boss->Init();
+
+	HealthManager::Instance().Init();
 
 }
 
@@ -132,8 +139,24 @@ void GameScene::Update()
 		}
 	}
 
+	// Boss ウェーブのときスポーン
+	if (WaveManager::Instance().GetCurrentWave() == WaveType::Boss)
+	{
+		if (m_boss && !m_boss->IsAlive())
+		{
+			m_boss->Spawn();
+		}
+	}
+
+	if (m_boss && m_boss->IsAlive()) m_boss->Update();
+
+	// 背景
+	m_background.Update();
+
+	// プレイヤー
 	if (m_player) m_player->Update();
 
+	// 敵
 	for (auto& e : m_Enemies)
 	{
 		if (e && e->IsAlive()) e->Update();
@@ -144,6 +167,13 @@ void GameScene::Update()
 	{
 		auto& bullets = m_player->GetBullets();
 		CollisionManager::CheckBulletsVsEnemies(bullets, m_Enemies);
+	}
+
+	// 当たり判定（弾 vs ボス）
+	if (m_player && m_boss)
+	{
+		auto& bullets = m_player->GetBullets();
+		CollisionManager::CheckBulletsVsBoss(bullets, m_boss);
 	}
 
 	// 倒されたMobEnemyのY座標を解放
@@ -186,6 +216,14 @@ void GameScene::Update()
 		}
 	}
 
+	// Fキーでボス死亡トリガー（テスト用）
+	if (GetAsyncKeyState('F') & 0x8000)
+	{
+		if (m_boss && m_boss->IsAlive())
+		{
+			m_boss->TriggerDeath();
+		}
+	}
 
 }
 
@@ -276,8 +314,7 @@ void GameScene::SpawnTankEnemy()
 void GameScene::Draw()
 {
 	// 背景
-	SHADER.m_spriteShader.SetMatrix(m_BackMat);
-	SHADER.m_spriteShader.DrawTex(&m_BackTex, Math::Rectangle{ 0,0,1280,720 }, 1.0f);
+	m_background.Draw();
 
 	// プレイヤー
 	if (m_player)
@@ -291,17 +328,25 @@ void GameScene::Draw()
 		if (e && e->IsAlive()) e->Draw(); // IsAlive() チェック追加
 	}
 
+	if (m_boss && m_boss->IsAlive()) m_boss->Draw();
+
 	// スコア
 	ScoreManager::Instance().Draw();
+
+	// 体力バー
+	HealthManager::Instance().Draw();
 
 }
 
 void GameScene::Release()
 {
-	m_BackTex.Release();
+	m_background.Release();
 
 	// スコア
 	ScoreManager::Instance().Release();
+
+	// 体力バー
+	HealthManager::Instance().Release();
 
 	if (m_player)
 	{
@@ -317,5 +362,11 @@ void GameScene::Release()
 		}
 	}
 	m_Enemies.clear();
+
+	if (m_boss)
+	{
+		m_boss->Release();
+		m_boss = nullptr;
+	}
 
 }

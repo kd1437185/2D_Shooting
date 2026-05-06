@@ -85,6 +85,15 @@
     <Filter Include="Src\Application\Object\Enemy\TankEnemy">
       <UniqueIdentifier>{eb5f5297-353e-41c5-8ce7-aaa58910bea0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Health">
+      <UniqueIdentifier>{11c7df5c-bdfa-4d9d-a425-0999528c9a0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Background">
+      <UniqueIdentifier>{31cd56c9-7dd8-470d-aac9-ba5bc27a6d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Enemy\Boss">
+      <UniqueIdentifier>{d88eb69d-89e6-4af7-87dd-bb527af8d8b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -222,6 +231,15 @@
     <ClInclude Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.h">
       <Filter>Src\Application\Object\Enemy\TankEnemy</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Health\HealthManager.h">
+      <Filter>Src\Application\Health</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Background\ScrollBackground.h">
+      <Filter>Src\Application\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\Boss\Boss.h">
+      <Filter>Src\Application\Object\Enemy\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -325,6 +343,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.cpp">
       <Filter>Src\Application\Object\Enemy\TankEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Health\HealthManager.cpp">
+      <Filter>Src\Application\Health</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Background\ScrollBackground.cpp">
+      <Filter>Src\Application\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\Boss\Boss.cpp">
+      <Filter>Src\Application\Object\Enemy\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

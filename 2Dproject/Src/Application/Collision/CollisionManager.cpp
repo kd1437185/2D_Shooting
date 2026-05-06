@@ -6,6 +6,7 @@
 #include "../Wave/WaveManager.h"
 #include "../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
 #include "../Object/Enemy/TankEnemy/TankEnemy.h"
+#include "../Object/Enemy/Boss/Boss.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -51,6 +52,28 @@ void CollisionManager::CheckBulletsVsEnemies(
 
                 WaveManager::Instance().OnEnemyDefeated();
             }
+        }
+    }
+}
+
+// ボス専用の当たり判定を追加
+void CollisionManager::CheckBulletsVsBoss(
+    std::vector<std::shared_ptr<Bullet>>& _bullets,
+    std::shared_ptr<Boss>& _boss)
+{
+    if (!_boss || !_boss->IsAlive()) return;
+    if (!_boss->IsCollidable()) return;
+
+    for (auto& bullet : _bullets)
+    {
+        if (!bullet || !bullet->IsAlive()) continue;
+
+        if (CircleCollision(
+            bullet->GetPos(), AppConst::BULLET_RADIUS,
+            _boss->GetPos(), AppConst::BOSS_RADIUS))
+        {
+            bullet->SetAlive(false);
+            // TODO: ボスへのダメージ処理・スコア加算は体力実装時に追加
         }
     }
 }

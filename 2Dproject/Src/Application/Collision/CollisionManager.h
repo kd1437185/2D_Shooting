@@ -2,6 +2,7 @@
 
 class BaseObject;
 class Bullet;
+class Boss;
 
 class CollisionManager
 {
@@ -15,4 +16,8 @@ public:
     static void CheckBulletsVsEnemies(
         std::vector<std::shared_ptr<Bullet>>& _bullets,
         std::vector<std::shared_ptr<BaseObject>>& _enemies);
+
+    static void CheckBulletsVsBoss(
+        std::vector<std::shared_ptr<Bullet>>& _bullets,
+        std::shared_ptr<Boss>& _boss);
 };

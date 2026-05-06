@@ -160,9 +160,12 @@
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
     <ClInclude Include="Src\Application\AppConst.h" />
+    <ClInclude Include="Src\Application\Background\ScrollBackground.h" />
     <ClInclude Include="Src\Application\Collision\CollisionManager.h" />
+    <ClInclude Include="Src\Application\Health\HealthManager.h" />
     <ClInclude Include="Src\Application\Object\BaseObject.h" />
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h" />
+    <ClInclude Include="Src\Application\Object\Enemy\Boss\Boss.h" />
     <ClInclude Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.h" />
     <ClInclude Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.h" />
     <ClInclude Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.h" />
@@ -198,9 +201,12 @@
     <ClCompile Include="..\Library\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Application\Background\ScrollBackground.cpp" />
     <ClCompile Include="Src\Application\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Src\Application\Health\HealthManager.cpp" />
     <ClCompile Include="Src\Application\Object\BaseObject.cpp" />
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp" />
+    <ClCompile Include="Src\Application\Object\Enemy\Boss\Boss.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.cpp" />
