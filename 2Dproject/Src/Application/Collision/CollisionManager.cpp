@@ -5,6 +5,7 @@
 #include "../Score/ScoreManager.h"
 #include "../Wave/WaveManager.h"
 #include "../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
+#include "../Object/Enemy/TankEnemy/TankEnemy.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -30,9 +31,9 @@ void CollisionManager::CheckBulletsVsEnemies(
 
             float radius = AppConst::ENEMY_RADIUS;
             if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
-            {
                 radius = AppConst::SHOOTER_RADIUS;
-            }
+            else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
+                radius = AppConst::TANK_RADIUS;
 
             if (CircleCollision(
                 bullet->GetPos(), AppConst::BULLET_RADIUS,
@@ -42,13 +43,11 @@ void CollisionManager::CheckBulletsVsEnemies(
                 enemy->SetAlive(false);
 
                 if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
-                {
                     ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                }
+                else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
+                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
                 else
-                {
                     ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
-                }
 
                 WaveManager::Instance().OnEnemyDefeated();
             }

@@ -82,6 +82,9 @@
     <Filter Include="Src\Application\Object\Enemy\ShooterEnemy">
       <UniqueIdentifier>{309bfb9b-cd92-4f39-ae5b-2f088a1a9f47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Object\Enemy\TankEnemy">
+      <UniqueIdentifier>{eb5f5297-353e-41c5-8ce7-aaa58910bea0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -216,6 +219,9 @@
     <ClInclude Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.h">
       <Filter>Src\Application\Object\Enemy\ShooterEnemy</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.h">
+      <Filter>Src\Application\Object\Enemy\TankEnemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -316,6 +322,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.cpp">
       <Filter>Src\Application\Object\Enemy\ShooterEnemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.cpp">
+      <Filter>Src\Application\Object\Enemy\TankEnemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

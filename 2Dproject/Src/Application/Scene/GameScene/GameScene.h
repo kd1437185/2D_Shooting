@@ -36,10 +36,13 @@ private:
 	int m_shooterSpawnedCount = 0;
 	std::array<bool, 5> m_usedY2 = { false, false, false, false, false };
 
+	int  m_tankSpawnTimer = 0;
+	int  m_tankSpawnedCount = 0;
+
 	// “G‚ğoŒ»‚³‚¹‚é
 	void SpawnEnemy(); 
 	void SpawnShooterEnemy();
-
+	void SpawnTankEnemy();
 	
 
 };

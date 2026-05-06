@@ -2,6 +2,7 @@
 #include "../../Object/Player/Player.h"
 #include "../../Object/Enemy/MobEnemy/MobEnemy.h"
 #include "../../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
+#include "../../Object/Enemy/TankEnemy/TankEnemy.h"
 #include "../../Collision/CollisionManager.h"
 #include "../../Object/Bullet/Bullet.h"
 #include "../SceneManager.h"
@@ -49,6 +50,18 @@ void GameScene::Init()
 	m_shooterSpawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
 	m_shooterSpawnedCount = 0;
 	m_usedY2.fill(false);
+
+	// TankEnemy をプールとして生成
+	for (int i = 0; i < AppConst::TANK_MAX; i++)
+	{
+		auto enemy = std::make_shared<TankEnemy>();
+		enemy->Init();
+		m_Enemies.push_back(enemy);
+	}
+
+	m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
+	m_tankSpawnedCount = 0;
+
 }
 
 void GameScene::Update()
@@ -60,11 +73,20 @@ void GameScene::Update()
 	}
 	m_prevSpace = nowSpace;
 
-	// ウェーブクリア確認（次のウェーブの処理は将来ここに追加）
+	// ウェーブクリア確認
 	if (WaveManager::Instance().IsWaveClear())
 	{
 		WaveManager::Instance().ResetWaveClear();
-		// TODO: 次のウェーブの敵を出す処理を追加
+
+		// 次のウェーブ用にカウンターをリセット
+		m_spawnedCount = 0;
+		m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+		m_shooterSpawnedCount = 0;
+		m_shooterSpawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+		m_tankSpawnedCount = 0;
+		m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
+		m_usedY.fill(false);
+		m_usedY2.fill(false);
 	}
 
 	// MobEnemy ウェーブのときだけスポーン
@@ -92,6 +114,20 @@ void GameScene::Update()
 			{
 				m_shooterSpawnTimer = 0;
 				SpawnShooterEnemy();
+			}
+		}
+	}
+
+	// TankEnemy ウェーブのときだけスポーン
+	if (WaveManager::Instance().GetCurrentWave() == WaveType::Enemy3)
+	{
+		if (m_tankSpawnedCount < AppConst::TANK_MAX)
+		{
+			m_tankSpawnTimer++;
+			if (m_tankSpawnTimer >= AppConst::TANK_SPAWN_INTERVAL)
+			{
+				m_tankSpawnTimer = 0;
+				SpawnTankEnemy();
 			}
 		}
 	}
@@ -213,6 +249,28 @@ void GameScene::SpawnShooterEnemy()
 	target->Spawn(spawnX, spawnY);
 
 	m_shooterSpawnedCount++;
+}
+
+void GameScene::SpawnTankEnemy()
+{
+	// 非アクティブな TankEnemy を探す
+	std::shared_ptr<TankEnemy> target = nullptr;
+	for (auto& e : m_Enemies)
+	{
+		if (e && !e->IsAlive())
+		{
+			target = std::dynamic_pointer_cast<TankEnemy>(e);
+			if (target) break;
+		}
+	}
+	if (!target) return;
+
+	// 順番に固定X・Y座標で出現
+	float spawnX = AppConst::TANK_X_LIST[m_tankSpawnedCount];
+	float stopY = AppConst::TANK_STOP_Y_LIST[m_tankSpawnedCount];
+	target->Spawn(spawnX, stopY);
+
+	m_tankSpawnedCount++;
 }
 
 void GameScene::Draw()

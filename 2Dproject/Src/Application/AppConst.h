@@ -44,7 +44,30 @@ namespace AppConst
     static const float SHOOTER_RADIUS = SHOOTER_SCALED_W / 2.0f;  // 32.0f
     static const int   SCORE_PER_SHOOTER = 300;
 
-    // 弾（将来用）
+    // TankEnemy
+    static const int   TANK_W = 32;
+    static const int   TANK_H = 96;
+    static const float TANK_SCALE = 2.0f;
+    static const float TANK_SCALED_W = 64.0f;   // 32 * 2
+    static const float TANK_SCALED_H = 192.0f;  // 96 * 2
+    static const int   TANK_ANIM_MAX = 16;
+    static const int   TANK_ANIM_SPEED = 4;
+    static const float TANK_DROP_SPEED = 12.0f;   // 落下速度
+    static const float TANK_RISE_SPEED = 3.0f;    // 上昇速度
+    static const float TANK_RISE_AMOUNT = 60.0f;   // 上昇量
+    static const int   TANK_MAX = 3;
+    static const float TANK_RADIUS = 32.0f;
+    static const int   SCORE_PER_TANK = 500;
+    static const int   TANK_SPAWN_INTERVAL = 30;     // 0.5秒
+
+    // TankEnemy の固定X座標
+    static const float TANK_X_LIST[3] = { 200.0f, 200.0f, 200.0f };
+    // TankEnemy の出現Y座標（画面上から出てくる）
+    static const float TANK_SPAWN_Y = SCREEN_HALF_H + TANK_SCALED_H / 2.0f; // 456.0f
+    // TankEnemy の停止Y座標
+    static const float TANK_STOP_Y_LIST[3] = { 150.0f, -50.0f, -250.0f };
+
+    // 弾
     static const int   BULLET_SIZE = 16;
     static const float BULLET_SPEED = 15.0f;
     static const int   BULLET_MAX = 100; // 同時に出せる最大数

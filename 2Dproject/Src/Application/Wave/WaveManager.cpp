@@ -18,10 +18,10 @@ const int WaveManager::WAVE_KILL_COUNT[WAVE_ORDER_MAX] =
 {
     AppConst::ENEMY_MAX,    // MobEnemy: 5体
     AppConst::SHOOTER_MAX,  // ShooterEnemy: 5体
-    1,                      // Enemy3（未実装・仮）
+    AppConst::TANK_MAX,     // TankEnemy:    3体
     AppConst::ENEMY_MAX,    // MobEnemy: 5体
     AppConst::SHOOTER_MAX,  // ShooterEnemy: 5体
-    1,                      // Enemy3（未実装・仮）
+    AppConst::TANK_MAX,     // TankEnemy:    3体
     1                       // Boss（未実装・仮）
 };
 
