@@ -27,4 +27,19 @@ private:
 
 	bool m_prevSpace = false;
 
+	int  m_spawnTimer = 0;
+	int m_spawnedCount = 0; // 合計出現数
+	// 使用中のY座標インデックスを管理
+	std::array<bool, 5> m_usedY = { false, false, false, false, false };
+
+	int m_shooterSpawnTimer = 0;
+	int m_shooterSpawnedCount = 0;
+	std::array<bool, 5> m_usedY2 = { false, false, false, false, false };
+
+	// 敵を出現させる
+	void SpawnEnemy(); 
+	void SpawnShooterEnemy();
+
+	
+
 };

@@ -48,7 +48,6 @@ private:
 
 	// ƒL[“ü—Í
 	bool m_prevEnter = false;
-	bool m_prevZ = false;
 	bool m_prevUp = false;
 	bool m_prevDown = false;
 

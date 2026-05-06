@@ -76,6 +76,12 @@
     <Filter Include="Src\Application\Score">
       <UniqueIdentifier>{ebbf9c0d-8177-4936-8e32-8672b6ff9ece}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Wave">
+      <UniqueIdentifier>{4d8fa921-d5fc-49e7-9635-92142302c1d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Object\Enemy\ShooterEnemy">
+      <UniqueIdentifier>{309bfb9b-cd92-4f39-ae5b-2f088a1a9f47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -204,6 +210,12 @@
     <ClInclude Include="Src\Application\Score\ScoreManager.h">
       <Filter>Src\Application\Score</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Wave\WaveManager.h">
+      <Filter>Src\Application\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.h">
+      <Filter>Src\Application\Object\Enemy\ShooterEnemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -298,6 +310,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Score\ScoreManager.cpp">
       <Filter>Src\Application\Score</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Wave\WaveManager.cpp">
+      <Filter>Src\Application\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.cpp">
+      <Filter>Src\Application\Object\Enemy\ShooterEnemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

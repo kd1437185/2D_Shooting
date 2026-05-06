@@ -24,7 +24,10 @@ private:
 
 	std::vector<std::shared_ptr<Bullet>> m_Bullets;
 
-	// 弾を撃つ(Zキー)瞬間判定用
-	bool m_prevZ = false;
+	// 連射間隔タイマー
+	int  m_shotTimer = 0; 
+
+	// 向いている方向（1.0f = 右、-1.0f = 左）
+	float m_direction = 1.0f;
 
 };

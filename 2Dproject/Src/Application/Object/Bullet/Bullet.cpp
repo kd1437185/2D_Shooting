@@ -7,9 +7,10 @@ void Bullet::Init()
     m_aliveFlg = false; // 最初は非アクティブ
 }
 
-void Bullet::Fire(Math::Vector2 _startPos)
+void Bullet::Fire(Math::Vector2 _startPos, float _direction)
 {
     m_pos = _startPos;
+    m_direction = _direction;
     m_aliveFlg = true;
 }
 
@@ -17,11 +18,12 @@ void Bullet::Update()
 {
     if (!m_aliveFlg) return;
 
-    // 右に進む
-    m_pos.x += AppConst::BULLET_SPEED;
+    // 向いている方向に進む
+    m_pos.x += AppConst::BULLET_SPEED * m_direction;
 
     // 画面外に出たら非アクティブ
-    if (m_pos.x > AppConst::SCREEN_HALF_W + AppConst::BULLET_SIZE)
+    if (m_pos.x > AppConst::SCREEN_HALF_W + AppConst::BULLET_SIZE ||
+        m_pos.x < -AppConst::SCREEN_HALF_W - AppConst::BULLET_SIZE)
     {
         m_aliveFlg = false;
     }

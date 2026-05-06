@@ -1,11 +1,13 @@
 #include "GameScene.h"
 #include "../../Object/Player/Player.h"
 #include "../../Object/Enemy/MobEnemy/MobEnemy.h"
+#include "../../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
 #include "../../Collision/CollisionManager.h"
 #include "../../Object/Bullet/Bullet.h"
 #include "../SceneManager.h"
 #include "../../Score/ScoreManager.h"
 #include "../../AppConst.h"
+#include "../../Wave/WaveManager.h"
 
 void GameScene::Init()
 {
@@ -16,25 +18,37 @@ void GameScene::Init()
 	// スコア
 	ScoreManager::Instance().Init();
 
+	// ウェーブ
+	WaveManager::Instance().Init();
+
 	// プレイヤー
 	m_player = std::make_shared<Player>();
 	m_player->Init();
 
-	// 敵を縦一列に複数生成
-	// 画面中央に揃えるためにオフセットを計算
-	float totalHeight = AppConst::ENEMY_SPACE * (AppConst::ENEMY_COUNT - 1);
-	float startY = totalHeight / 2.0f;	//上端のY座標
-
-	for (int i = 0; i < AppConst::ENEMY_COUNT; ++i)
+	// MobEnemyをあらかじめ ENEMY_MAX 体プールとして生成
+	for (int i = 0; i < AppConst::ENEMY_MAX; i++)
 	{
 		auto enemy = std::make_shared<MobEnemy>();
 		enemy->Init();
-
-		// 初期位置を設定(右端から少し外側、縦に均等配置)
-		enemy->SetPos({ AppConst::SCREEN_HALF_W + AppConst::ENEMY_SIZE,startY - AppConst::ENEMY_SPACE * i });
-
 		m_Enemies.push_back(enemy);
 	}
+
+	// タイマーをすぐ1体出るようにする
+	m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+	m_spawnedCount = 0; // 追加
+	m_usedY.fill(false);
+
+	// ShooterEnemy もプールとして生成
+	for (int i = 0; i < AppConst::SHOOTER_MAX; i++)
+	{
+		auto enemy = std::make_shared<ShooterEnemy>();
+		enemy->Init();
+		m_Enemies.push_back(enemy);
+	}
+
+	m_shooterSpawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+	m_shooterSpawnedCount = 0;
+	m_usedY2.fill(false);
 }
 
 void GameScene::Update()
@@ -46,18 +60,47 @@ void GameScene::Update()
 	}
 	m_prevSpace = nowSpace;
 
-	// プレイヤー
-	if (m_player)
+	// ウェーブクリア確認（次のウェーブの処理は将来ここに追加）
+	if (WaveManager::Instance().IsWaveClear())
 	{
-		m_player->Update();
+		WaveManager::Instance().ResetWaveClear();
+		// TODO: 次のウェーブの敵を出す処理を追加
 	}
 
-	// モブエネミー
+	// MobEnemy ウェーブのときだけスポーン
+	if (WaveManager::Instance().GetCurrentWave() == WaveType::MobEnemy)
+	{
+		// 合計 ENEMY_MAX 体出し切ったらスポーンしない
+		if (m_spawnedCount < AppConst::ENEMY_MAX)
+		{
+			m_spawnTimer++;
+			if (m_spawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
+			{
+				m_spawnTimer = 0;
+				SpawnEnemy();
+			}
+		}
+	}
+
+	// ShooterEnemy ウェーブのときだけスポーン
+	if (WaveManager::Instance().GetCurrentWave() == WaveType::Enemy2)
+	{
+		if (m_shooterSpawnedCount < AppConst::SHOOTER_MAX)
+		{
+			m_shooterSpawnTimer++;
+			if (m_shooterSpawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
+			{
+				m_shooterSpawnTimer = 0;
+				SpawnShooterEnemy();
+			}
+		}
+	}
+
+	if (m_player) m_player->Update();
+
 	for (auto& e : m_Enemies)
 	{
-		{
-			if (e && e->IsAlive()) e->Update(); // IsAlive() チェック追加
-		}
+		if (e && e->IsAlive()) e->Update();
 	}
 
 	// 当たり判定
@@ -67,6 +110,109 @@ void GameScene::Update()
 		CollisionManager::CheckBulletsVsEnemies(bullets, m_Enemies);
 	}
 
+	// 倒されたMobEnemyのY座標を解放
+	for (int i = 0; i < (int)m_Enemies.size(); i++)
+	{
+		auto mob = std::dynamic_pointer_cast<MobEnemy>(m_Enemies[i]);
+		if (!mob) continue;
+		if (mob->IsAlive()) continue;
+		if (mob->IsYReleased()) continue; // 解放済みならスキップ
+
+		for (int j = 0; j < 5; j++)
+		{
+			if (m_usedY[j] &&
+				fabsf(mob->GetPos().y - AppConst::ENEMY_Y_LIST[j]) < 1.0f)
+			{
+				m_usedY[j] = false;
+				mob->SetYReleased(true); // 解放済みにする
+				break;
+			}
+		}
+	}
+
+	// 倒された ShooterEnemy のY座標を解放
+	for (int i = 0; i < (int)m_Enemies.size(); i++)
+	{
+		auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(m_Enemies[i]);
+		if (!shooter) continue;
+		if (shooter->IsAlive()) continue;
+		if (shooter->IsYReleased()) continue;
+
+		for (int j = 0; j < 5; j++)
+		{
+			if (m_usedY2[j] &&
+				fabsf(shooter->GetPos().y - AppConst::ENEMY_Y_LIST[j]) < 1.0f)
+			{
+				m_usedY2[j] = false;
+				shooter->SetYReleased(true);
+				break;
+			}
+		}
+	}
+
+
+}
+
+void GameScene::SpawnEnemy()
+{
+	// 非アクティブな敵を探す
+	std::shared_ptr<MobEnemy> target = nullptr;
+	for (auto& e : m_Enemies)
+	{
+		if (e && !e->IsAlive())
+		{
+			target = std::dynamic_pointer_cast<MobEnemy>(e);
+			if (target) break;
+		}
+	}
+	if (!target) return;
+
+	// 使われていないY座標インデックスをランダムに選ぶ
+	std::vector<int> availableY;
+	for (int i = 0; i < 5; i++)
+	{
+		if (!m_usedY[i]) availableY.push_back(i);
+	}
+	if (availableY.empty()) return;
+
+	int randIdx = availableY[rand() % availableY.size()];
+	m_usedY[randIdx] = true;
+
+	float spawnX = AppConst::SCREEN_HALF_W + AppConst::ENEMY_SCALED_W;
+	float spawnY = AppConst::ENEMY_Y_LIST[randIdx];
+	target->Spawn(spawnX, spawnY);
+
+	m_spawnedCount++; // 出現数をカウント
+}
+
+void GameScene::SpawnShooterEnemy()
+{
+	std::shared_ptr<ShooterEnemy> target = nullptr;
+	for (auto& e : m_Enemies)
+	{
+		if (e && !e->IsAlive())
+		{
+			target = std::dynamic_pointer_cast<ShooterEnemy>(e);
+			if (target) break;
+		}
+	}
+	if (!target) return;
+
+	std::vector<int> availableY;
+	for (int i = 0; i < 5; i++)
+	{
+		if (!m_usedY2[i]) availableY.push_back(i);
+	}
+	if (availableY.empty()) return;
+
+	int randIdx = availableY[rand() % availableY.size()];
+	m_usedY2[randIdx] = true;
+
+	float spawnX = AppConst::SCREEN_HALF_W + AppConst::SHOOTER_SCALED_W;
+	float spawnY = AppConst::ENEMY_Y_LIST[randIdx];
+	target->Spawn(spawnX, spawnY);
+
+	m_shooterSpawnedCount++;
 }
 
 void GameScene::Draw()

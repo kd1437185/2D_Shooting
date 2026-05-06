@@ -3,6 +3,8 @@
 #include "../Object/Bullet/Bullet.h"
 #include "../AppConst.h"
 #include "../Score/ScoreManager.h"
+#include "../Wave/WaveManager.h"
+#include "../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -26,13 +28,29 @@ void CollisionManager::CheckBulletsVsEnemies(
         {
             if (!enemy || !enemy->IsAlive()) continue;
 
+            float radius = AppConst::ENEMY_RADIUS;
+            if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
+            {
+                radius = AppConst::SHOOTER_RADIUS;
+            }
+
             if (CircleCollision(
                 bullet->GetPos(), AppConst::BULLET_RADIUS,
-                enemy->GetPos(), AppConst::ENEMY_RADIUS))
+                enemy->GetPos(), radius))
             {
                 bullet->SetAlive(false);
                 enemy->SetAlive(false);
-                ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+
+                if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
+                {
+                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
+                }
+                else
+                {
+                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+                }
+
+                WaveManager::Instance().OnEnemyDefeated();
             }
         }
     }

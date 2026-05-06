@@ -79,9 +79,9 @@ void TitleScene::UpdateMenu()
 	m_prevUp = nowUp;
 	m_prevDown = nowDown;
 
-	// Zキーで決定
-	bool nowZ = GetAsyncKeyState('Z') & 0x8000;
-	if (nowZ && !m_prevZ)
+	// Enterキーで決定（Zキーから変更）
+	bool nowEnter = GetAsyncKeyState(VK_RETURN) & 0x8000;
+	if (nowEnter && !m_prevEnter)
 	{
 		switch (m_selectIndex)
 		{
@@ -90,7 +90,7 @@ void TitleScene::UpdateMenu()
 			break;
 		}
 	}
-	m_prevZ = nowZ;
+	m_prevEnter = nowEnter;
 }
 
 void TitleScene::Draw()
