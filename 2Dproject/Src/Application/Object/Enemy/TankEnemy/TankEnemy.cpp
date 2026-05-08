@@ -8,6 +8,7 @@ void TankEnemy::Init()
     m_animFrame = 0;
     m_animTimer = 0;
     m_phase = Phase::Drop;
+    SetHp(AppConst::TANK_HP);
 }
 
 void TankEnemy::Spawn(float _x, float _stopY)
@@ -18,6 +19,7 @@ void TankEnemy::Spawn(float _x, float _stopY)
     m_phase = Phase::Drop;
     m_animFrame = 0;
     m_animTimer = 0;
+    SetHp(AppConst::TANK_HP);
 }
 
 void TankEnemy::Update()

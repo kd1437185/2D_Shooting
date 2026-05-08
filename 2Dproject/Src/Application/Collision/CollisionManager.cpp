@@ -41,16 +41,19 @@ void CollisionManager::CheckBulletsVsEnemies(
                 enemy->GetPos(), radius))
             {
                 bullet->SetAlive(false);
-                enemy->SetAlive(false);
+                enemy->Damage(bullet->GetDamage()); // Bulletのダメージを使用
 
-                if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
-                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
-                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
-                else
-                    ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+                if (enemy->IsDead())
+                {
+                    if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
+                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
+                    else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
+                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
+                    else
+                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
 
-                WaveManager::Instance().OnEnemyDefeated();
+                    WaveManager::Instance().OnEnemyDefeated();
+                }
             }
         }
     }
@@ -73,7 +76,13 @@ void CollisionManager::CheckBulletsVsBoss(
             _boss->GetPos(), AppConst::BOSS_RADIUS))
         {
             bullet->SetAlive(false);
-            // TODO: ボスへのダメージ処理・スコア加算は体力実装時に追加
+            _boss->Damage(bullet->GetDamage()); // Bulletのダメージを使用
+
+            if (_boss->IsDead())
+            {
+                ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
+                _boss->TriggerDeath();
+            }
         }
     }
 }

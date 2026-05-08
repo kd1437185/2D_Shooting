@@ -8,6 +8,7 @@ void MobEnemy::Init()
 	m_animFrame = 0;
 	m_animTimer = 0;
 	m_direction = -1.0f; // 右から左に進むので左向き
+    SetHp(AppConst::MOB_HP);
 }
 
 void MobEnemy::Spawn(float _x, float _y)
@@ -16,6 +17,7 @@ void MobEnemy::Spawn(float _x, float _y)
     m_aliveFlg = true;
     m_direction = -1.0f; // 右から出るので左向き
     m_yReleased = false; // 出現時にリセット
+    SetHp(AppConst::MOB_HP);
 }
 
 

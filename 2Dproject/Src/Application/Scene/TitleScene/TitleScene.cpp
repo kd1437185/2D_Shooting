@@ -5,13 +5,19 @@
 
 void TitleScene::Init()
 {
-	m_BackTex.Load("Texture/TitleScene/title.png");
+	// îwåi
+	ScrollBackground::Instance().Init();
 
 	m_PressEnterTex.Load("Texture/TitleScene/press_enter.png");
 	m_GameStartTex.Load("Texture/TitleScene/game_start.png");
 
-	// îwåi
-	m_BackMat = Math::Matrix::CreateTranslation(0, 0, 0);
+	m_LogoTex.Load("Texture/TitleScene/Title.png");
+
+	// ÉçÉSÇÕà íuå≈íËÇ»ÇÃÇ≈ Init Ç≈ê›íË
+	m_LogoMat = Math::Matrix::CreateTranslation(
+		0,
+		AppConst::SCREEN_HALF_H - AppConst::LOGO_Y - AppConst::LOGO_H / 2.0f,
+		0);
 
 	m_phase = Phase::Title;
 	m_blinkTimer = 0;
@@ -22,7 +28,8 @@ void TitleScene::Init()
 
 void TitleScene::Update()
 {
-	
+	ScrollBackground::Instance().Update();
+
 	switch (m_phase)
 	{
 	case Phase::Title: UpdateTitle(); break;
@@ -95,10 +102,12 @@ void TitleScene::UpdateMenu()
 
 void TitleScene::Draw()
 {
-	// îwåiÅièÌÇ…ï`âÊÅj
-	SHADER.m_spriteShader.SetMatrix(m_BackMat);
-	SHADER.m_spriteShader.DrawTex(&m_BackTex,
-		Math::Rectangle{ 0, 0, AppConst::SCREEN_W, AppConst::SCREEN_H }, 1.0f);
+	ScrollBackground::Instance().Draw();	// îwåiÇêÊÇ…ï`âÊ
+
+	// ÉçÉSÇÕèÌÇ…ï\é¶
+	SHADER.m_spriteShader.SetMatrix(m_LogoMat);
+	SHADER.m_spriteShader.DrawTex(&m_LogoTex,
+		Math::Rectangle{ 0, 0, AppConst::LOGO_W, AppConst::LOGO_H }, 1.0f);
 
 	switch (m_phase)
 	{
@@ -143,8 +152,8 @@ void TitleScene::DrawMenu()
 
 void TitleScene::Release()
 {
-	m_BackTex.Release();
 	m_PressEnterTex.Release();
 	m_GameStartTex.Release();
+	m_LogoTex.Release();
 
 }

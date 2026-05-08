@@ -21,8 +21,6 @@ public:
 
 private:
 
-	// ƒQ[ƒ€‰æ–Ê”wŒi
-	ScrollBackground m_background;
 
 	std::shared_ptr<Player> m_player = nullptr;
 	std::vector<std::shared_ptr<BaseObject>> m_Enemies;	// •¡”‘Î‰

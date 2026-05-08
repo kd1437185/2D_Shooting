@@ -3,11 +3,16 @@
 
 void ScrollBackground::Init()
 {
-    for (int i = 0; i < AppConst::BG_LAYER_COUNT; i++)
+    // ‚·‚Å‚É‰Šú‰»Ï‚Ý‚È‚ç scrollX ‚ÍƒŠƒZƒbƒg‚µ‚È‚¢
+    if (!m_initialized)
     {
-        std::string path = "Texture/Background/" + std::to_string(i) + ".png";
-        m_layers[i].tex.Load(path.c_str());
-        m_layers[i].scrollX = 0.0f;
+        for (int i = 0; i < AppConst::BG_LAYER_COUNT; i++)
+        {
+            std::string path = "Texture/Background/" + std::to_string(i) + ".png";
+            m_layers[i].tex.Load(path.c_str());
+            m_layers[i].scrollX = 0.0f;
+        }
+        m_initialized = true;
     }
 }
 

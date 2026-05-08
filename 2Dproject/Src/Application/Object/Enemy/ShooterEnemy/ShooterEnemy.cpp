@@ -11,6 +11,7 @@ void ShooterEnemy::Init()
     m_floatTimer = 0.0f;
     m_yReleased = false;
     m_phase = Phase::Enter;
+    SetHp(AppConst::SHOOTER_HP);
 }
 
 void ShooterEnemy::Spawn(float _x, float _y)
@@ -22,6 +23,7 @@ void ShooterEnemy::Spawn(float _x, float _y)
     m_baseY = _y;
     m_yReleased = false;
     m_phase = Phase::Enter;
+    SetHp(AppConst::SHOOTER_HP);
 }
 
 void ShooterEnemy::Update()

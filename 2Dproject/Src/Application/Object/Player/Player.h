@@ -19,6 +19,13 @@ public:
 	// GameScene から弾リストを取得して当たり判定に使う
 	std::vector<std::shared_ptr<Bullet>>& GetBullets() { return m_Bullets; }
 
+	int  GetBulletDamage() const { return m_bulletDamage; }
+	void UpgradeBullet();        // 弾を強化
+	int  GetBulletLevel() const { return m_bulletLevel; }
+
+	void StartEnter(); // 入場開始
+	bool IsEntering() const { return m_isEntering; }
+
 private:
 	void Shot();
 
@@ -29,5 +36,13 @@ private:
 
 	// 向いている方向（1.0f = 右、-1.0f = 左）
 	float m_direction = 1.0f;
+
+	int m_bulletDamage = 10;
+	int m_bulletLevel = 1;
+
+	int   m_animFrame = 0;
+	int   m_animTimer = 0;
+
+	bool m_isEntering = false; // 入場中フラグ
 
 };

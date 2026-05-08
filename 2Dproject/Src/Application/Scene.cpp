@@ -24,7 +24,7 @@ void Scene::Update()
 
 void Scene::Init()
 {
-	
+
 }
 
 void Scene::Release()

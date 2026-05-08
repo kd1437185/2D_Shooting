@@ -4,9 +4,9 @@
 enum class WaveType
 {
     MobEnemy,   // 雑魚敵
-    Enemy2,     // 敵2（未実装）
-    Enemy3,     // 敵3（未実装）
-    Boss,       // ボス（未実装）
+    Enemy2,     // 敵2
+    Enemy3,     // 敵3
+    Boss,       // ボス
     Clear       // 全ウェーブクリア
 };
 

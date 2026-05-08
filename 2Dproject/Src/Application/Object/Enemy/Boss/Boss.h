@@ -39,6 +39,8 @@ public:
     }
     Phase GetPhase() const { return m_phase; }
 
+    void Damage(int _amount) override;
+
 private:
     void UpdateEnter();
     void UpdateIdleBefore();

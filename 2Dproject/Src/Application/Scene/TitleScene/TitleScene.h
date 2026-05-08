@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../BaseScene/BaseScene.h"
+#include "../../Background/ScrollBackground.h"
 
 class TitleScene : public BaseScene
 {
@@ -27,9 +28,6 @@ private:
 	void DrawTitle();
 	void DrawMenu();
 
-	// タイトル背景
-	KdTexture		m_BackTex;
-	Math::Matrix	m_BackMat;
 
 	// テキスト
 	KdTexture    m_PressEnterTex;
@@ -52,5 +50,8 @@ private:
 	bool m_prevDown = false;
 
 	Phase m_phase = Phase::Title;
+
+	KdTexture    m_LogoTex;
+	Math::Matrix m_LogoMat;
 };
 

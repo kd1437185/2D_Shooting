@@ -15,7 +15,7 @@
 void GameScene::Init()
 {
 	// 背景
-	m_background.Init();
+	ScrollBackground::Instance().Init();
 
 	// スコア
 	ScoreManager::Instance().Init();
@@ -23,9 +23,10 @@ void GameScene::Init()
 	// ウェーブ
 	WaveManager::Instance().Init();
 
-	// プレイヤー
+	// プレイヤー（入場演出から開始）
 	m_player = std::make_shared<Player>();
 	m_player->Init();
+	m_player->StartEnter(); // 入場開始
 
 	// MobEnemyをあらかじめ ENEMY_MAX 体プールとして生成
 	for (int i = 0; i < AppConst::ENEMY_MAX; i++)
@@ -79,6 +80,16 @@ void GameScene::Update()
 		SceneManager::Instance().SetNextScene(SceneManager::SceneType::Title);
 	}
 	m_prevSpace = nowSpace;
+
+	// 背景
+	ScrollBackground::Instance().Update();
+
+	// 入場中は敵スポーン・当たり判定をしない
+	if (m_player && m_player->IsEntering())
+	{
+		m_player->Update();
+		return;
+	}
 
 	// ウェーブクリア確認
 	if (WaveManager::Instance().IsWaveClear())
@@ -139,10 +150,11 @@ void GameScene::Update()
 		}
 	}
 
-	// Boss ウェーブのときスポーン
+	// Boss ウェーブのときスポーン（最初の1回だけ）
 	if (WaveManager::Instance().GetCurrentWave() == WaveType::Boss)
 	{
-		if (m_boss && !m_boss->IsAlive())
+		if (m_boss && !m_boss->IsAlive() && m_boss->GetPhase() != Boss::Phase::Death
+			&& m_boss->GetPhase() != Boss::Phase::EnterFromLeft)
 		{
 			m_boss->Spawn();
 		}
@@ -150,8 +162,7 @@ void GameScene::Update()
 
 	if (m_boss && m_boss->IsAlive()) m_boss->Update();
 
-	// 背景
-	m_background.Update();
+	
 
 	// プレイヤー
 	if (m_player) m_player->Update();
@@ -216,14 +227,14 @@ void GameScene::Update()
 		}
 	}
 
-	// Fキーでボス死亡トリガー（テスト用）
-	if (GetAsyncKeyState('F') & 0x8000)
+	// Uキーで弾を強化（テスト用）
+	static bool prevU = false;
+	bool nowU = GetAsyncKeyState('U') & 0x8000;
+	if (nowU && !prevU)
 	{
-		if (m_boss && m_boss->IsAlive())
-		{
-			m_boss->TriggerDeath();
-		}
+		m_player->UpgradeBullet();
 	}
+	prevU = nowU;
 
 }
 
@@ -314,13 +325,10 @@ void GameScene::SpawnTankEnemy()
 void GameScene::Draw()
 {
 	// 背景
-	m_background.Draw();
+	ScrollBackground::Instance().Draw();
 
-	// プレイヤー
-	if (m_player)
-	{
-		m_player->Draw();
-	}
+	// ボス
+	if (m_boss && m_boss->IsAlive()) m_boss->Draw();
 
 	// モブエネミー
 	for (auto& e : m_Enemies)
@@ -328,7 +336,11 @@ void GameScene::Draw()
 		if (e && e->IsAlive()) e->Draw(); // IsAlive() チェック追加
 	}
 
-	if (m_boss && m_boss->IsAlive()) m_boss->Draw();
+	// プレイヤー
+	if (m_player)
+	{
+		m_player->Draw();
+	}
 
 	// スコア
 	ScoreManager::Instance().Draw();
@@ -340,7 +352,6 @@ void GameScene::Draw()
 
 void GameScene::Release()
 {
-	m_background.Release();
 
 	// スコア
 	ScoreManager::Instance().Release();

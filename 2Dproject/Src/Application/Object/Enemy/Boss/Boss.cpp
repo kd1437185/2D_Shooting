@@ -16,6 +16,7 @@ void Boss::Init()
     m_prevWasIdle = false;
     m_fromLeft = false;
     m_phase = Phase::Enter;
+    SetHp(AppConst::BOSS_HP);
 }
 
 void Boss::Spawn()
@@ -45,12 +46,12 @@ void Boss::Update()
 
     switch (m_phase)
     {
-    case Phase::Enter:      UpdateEnter();            break;
-    case Phase::IdleBefore: UpdateIdleBefore();       break;
-    case Phase::Transform:  UpdateTransform();        break;
-    case Phase::Battle:     UpdateBattle();           break;
-    case Phase::Attack1:    UpdateAttack1();          break;
-    case Phase::Attack2:    UpdateAttack2();          break;
+    case Phase::Enter:         UpdateEnter();         break;
+    case Phase::IdleBefore:    UpdateIdleBefore();    break;
+    case Phase::Transform:     UpdateTransform();     break;
+    case Phase::Battle:        UpdateBattle();        break;
+    case Phase::Attack1:       UpdateAttack1();       break;
+    case Phase::Attack2:       UpdateAttack2();       break;
     case Phase::Death:         UpdateDeath();         break;
     case Phase::EnterFromLeft: UpdateEnterFromLeft(); break;
     }
@@ -175,15 +176,14 @@ void Boss::UpdateDeath()
         m_animTimer = 0;
         m_animFrame++;
 
-        // アニメ完了 or 画面外に落ちたら左から再登場
         if (m_animFrame >= AppConst::BOSS_DEATH_ANIM_MAX ||
             m_pos.y < -AppConst::SCREEN_HALF_H - AppConst::BOSS_H)
         {
-            // 左から再登場
             m_pos = { AppConst::BOSS_SPAWN_X_LEFT, AppConst::BOSS_STOP_Y };
             m_animFrame = 0;
             m_animTimer = 0;
             m_fromLeft = true;
+            SetHp(AppConst::BOSS_HP); // 体力をリセット
             m_phase = Phase::EnterFromLeft;
         }
     }
@@ -304,4 +304,15 @@ void Boss::Release()
     m_Attack2Tex.Release();
     m_DeathTex.Release();
 
+}
+
+void Boss::Damage(int _amount)
+{
+    m_hp -= _amount;
+    if (m_hp <= 0)
+    {
+        m_hp = 0;
+        // aliveFlg は false にしない！死亡モーション後に処理する
+        TriggerDeath();
+    }
 }

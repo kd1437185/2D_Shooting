@@ -33,7 +33,7 @@ bool Application::Init(int w, int h)
 	//===================================================================
 	// ウィンドウ作成
 	//===================================================================
-	if (m_window.Create(w, h, "タイトル名", "Window") == false) {
+	if (m_window.Create(w, h, "RustFairy", "Window") == false) {
 		MessageBoxA(nullptr, "ウィンドウ作成に失敗", "エラー", MB_OK);
 		return false;
 	}
@@ -255,7 +255,7 @@ void Application::Execute()
 
 			// ここで「上書き」する！
 			char title[256];
-			sprintf_s(title, "タイトル名 %d FPS", m_fps);
+			sprintf_s(title, "RustFaily %d FPS", m_fps);
 			SetWindowTextA(m_window.GetWndHandle(), title);
 		}
 

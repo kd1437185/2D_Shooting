@@ -8,10 +8,27 @@ namespace AppConst
     static const float SCREEN_HALF_W = 640.0f;
     static const float SCREEN_HALF_H = 360.0f;
 
+    // タイトルロゴ
+    static const int   LOGO_W = 536;
+    static const int   LOGO_H = 357;
+    static const float LOGO_Y = 100.0f; // 中央上部からの距離
+
     // プレイヤー
-    static const int   PLAYER_SIZE = 64;
+    static const int   PLAYER_W = 32;
+    static const int   PLAYER_H = 32;
+    static const float PLAYER_SCALE = 2.0f;
+    static const float PLAYER_SCALED_W = 64.0f;
+    static const float PLAYER_SCALED_H = 64.0f;
+    static const int   PLAYER_SIZE = 64;   // 当たり判定用（既存との互換）
     static const float PLAYER_SPEED = 7.0f;
+    static const int   PLAYER_ANIM_MAX = 8;
+    static const int   PLAYER_ANIM_SPEED = 6;
     static const int SHOT_INTERVAL = 3; // 連射間隔（フレーム数）小さいほど速い
+
+    // プレイヤー入場
+    static const float PLAYER_ENTER_SPEED = 4.0f;
+    static const float PLAYER_ENTER_START_X = -(SCREEN_HALF_W + 64.0f); // 画面左外
+    static const float PLAYER_ENTER_STOP_X = -300.0f; // 停止位置
 
     // MobEnemy
     static const int   ENEMY_W = 22;    // 1コマの幅
@@ -68,12 +85,25 @@ namespace AppConst
     static const float TANK_STOP_Y_LIST[3] = { 150.0f, -50.0f, -250.0f };
 
     // 弾
-    static const int   BULLET_SIZE = 16;
-    static const float BULLET_SPEED = 15.0f;
+    static const int   BULLET_W = 100;
+    static const int   BULLET_H = 100;
+    static const float BULLET_SCALE = 0.8f;  // 1/5に縮小
+    static const float BULLET_SCALED_W = 20.0f; // 100 * 0.2
+    static const int   BULLET_SIZE = 20;    // 当たり判定用
+    static const float BULLET_RADIUS = 10.0f;   // BULLET_SIZE の半分
+    static const int   BULLET_ANIM_MAX = 60;
+    static const int   BULLET_ANIM_COLS = 8;     // 横のコマ数
+    static const int   BULLET_ANIM_SPEED = 1;     // アニメ速度
+    static const float BULLET_SPEED = 12.0f;
     static const int   BULLET_MAX = 100; // 同時に出せる最大数
 
+    // 弾のダメージ
+    static const int BULLET_DAMAGE_LV1 = 10;  // レベル1
+    static const int BULLET_DAMAGE_LV2 = 25;  // レベル2
+    static const int BULLET_DAMAGE_LV3 = 50;  // レベル3
+    static const int BULLET_DAMAGE_LV4 = 100; // レベル4（最大）
+
     // 当たり判定の半径
-    static const float BULLET_RADIUS = 8.0f;   // BULLET_SIZE の半分
     static const float ENEMY_RADIUS = ENEMY_SCALED_W / 2.0f;  // 22.0f
     static const float PLAYER_RADIUS = 32.0f;  // PLAYER_SIZE の半分
 
@@ -149,5 +179,11 @@ namespace AppConst
     static const float BOSS_DEATH_FALL_SPEED = 4.0f; // 落下速度
     // 左から再登場
     static const float BOSS_SPAWN_X_LEFT = -(SCREEN_HALF_W + 359.0f); // 画面左外
+
+    // 各敵の体力
+    static const int MOB_HP = 100;
+    static const int SHOOTER_HP = 200;
+    static const int TANK_HP = 500;
+    static const int BOSS_HP = 1000;
 
 }
