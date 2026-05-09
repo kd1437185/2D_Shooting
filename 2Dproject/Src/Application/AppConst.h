@@ -156,6 +156,36 @@ namespace AppConst
     static const int   HOMING_LIFETIME = 60;   // 生存時間（フレーム・調整可）2秒=120
     static const int   HOMING_INTERVAL = 4;    // 発射間隔（フレーム・調整可）
 
+    // ボス弾幕
+    static const int   DANMAKU_BULLET_MAX = 200;  // 同時出現最大数
+    static const float DANMAKU_BULLET_SPEED = 3.0f; // 弾速（調整可）
+    static const float DANMAKU_BULLET_RADIUS = 8.0f; // 当たり判定（調整可）
+    static const int   DANMAKU_SHOT_COUNT = 12;   // 1回の発射数（調整可）
+    static const int   DANMAKU_INTERVAL = 30;   // 発射間隔（調整可）
+    static const float DANMAKU_ROTATE_SPEED = 1.5f; // 回転速度（度/フレーム・調整可）
+    static const int   DANMAKU_COLOR_CHANGE = 5;    // 何回撃ったら色を変えるか（調整可）
+
+    // ボス弾幕パターン別設定
+    // パターン2：スパイラル
+    static const int   DANMAKU_SPIRAL_ARMS = 3;     // 腕の数（調整可）
+    static const float DANMAKU_SPIRAL_ROTATE = 3.0f;  // 回転速度（度/フレーム・調整可）
+    static const int   DANMAKU_SPIRAL_INTERVAL = 12;     // 発射間隔（調整可）
+
+    // パターン3：波状
+    static const int   DANMAKU_WAVE_COUNT = 8;     // 1回の発射数（調整可）
+    static const float DANMAKU_WAVE_SPEED = 4.0f;  // 弾速（調整可）
+    static const float DANMAKU_WAVE_AMPLITUDE = 30.0f; // 波の振幅（度・調整可）
+    static const float DANMAKU_WAVE_FREQ = 0.1f;  // 波の周波数（調整可）
+    static const int   DANMAKU_WAVE_INTERVAL = 30;    // 発射間隔（調整可）
+
+    // パターン4：展開弾
+    static const int   DANMAKU_EXPAND_COUNT = 12;    // 展開弾数（調整可）
+    static const float DANMAKU_EXPAND_SPEED = 1.5f;  // 展開速度（低速・調整可）
+    static const float DANMAKU_EXPAND_RADIUS = 150.0f;// 展開半径（調整可）
+    static const int   DANMAKU_EXPAND_STOP_TIME = 60;    // 停止時間（フレーム・調整可）
+    static const float DANMAKU_EXPAND_FAST_SPEED = 20.0f; // 高速発射速度（調整可）
+    static const int   DANMAKU_EXPAND_INTERVAL = 300;   // 全体の発射間隔（調整可）
+
     // 当たり判定の半径
     static const float ENEMY_RADIUS = ENEMY_SCALED_W / 2.0f;  // 22.0f
     static const float PLAYER_RADIUS = 8.0f;

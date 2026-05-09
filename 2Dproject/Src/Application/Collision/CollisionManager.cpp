@@ -2,6 +2,7 @@
 #include "../Object/BaseObject.h"
 #include "../Object/Bullet/Bullet.h"
 #include "../Object/Bullet/HomingBullet.h"
+#include "../Object/Bullet/DanmakuBullet.h"
 #include "../AppConst.h"
 #include "../Score/ScoreManager.h"
 #include "../Wave/WaveManager.h"
@@ -223,6 +224,25 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
                     HealthManager::Instance().Damage();
                 }
             }
+        }
+    }
+}
+
+void CollisionManager::CheckDanmakuVsPlayer(
+    std::vector<std::shared_ptr<DanmakuBullet>>& _bullets,
+    std::shared_ptr<Player>& _player)
+{
+    if (!_player) return;
+
+    for (auto& b : _bullets)
+    {
+        if (!b || !b->IsAlive()) continue;
+        if (CircleCollision(
+            b->GetPos(), AppConst::DANMAKU_BULLET_RADIUS,
+            _player->GetPos(), AppConst::PLAYER_RADIUS))
+        {
+            b->SetAlive(false);
+            HealthManager::Instance().Damage();
         }
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Application/Object/BaseObject.h"
+#include "BossDanmaku.h"
 
 class Boss : public BaseObject
 {
@@ -49,6 +50,15 @@ public:
 
     void DrawName();
 
+    void DrawDanmaku() { m_danmaku.Draw(); }
+
+    std::vector<std::shared_ptr<DanmakuBullet>>& GetDanmakuBullets()
+    {
+        return m_danmaku.GetBullets();
+    }
+
+    void SetPlayerPos(Math::Vector2 _pos) { m_playerPos = _pos; }
+
 private:
     void UpdateEnter();
     void UpdateIdleBefore();
@@ -91,4 +101,12 @@ private:
         FadeOut
     };
     NamePhase m_namePhase = NamePhase::None;
+
+    BossDanmaku m_danmaku;
+    int         m_danmakuTimer = 0; // 内部タイマー
+
+    int m_patternTimer = 0;
+    int m_currentPattern = 1;
+
+    Math::Vector2 m_playerPos = {};
 };

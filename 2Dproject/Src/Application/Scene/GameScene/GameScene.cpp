@@ -180,7 +180,12 @@ void GameScene::Update()
 		}
 	}
 
-	if (m_boss && m_boss->IsAlive()) m_boss->Update();
+	// ボス
+	if (m_boss && m_boss->IsAlive())
+	{
+		if (m_player) m_boss->SetPlayerPos(m_player->GetPos());
+		m_boss->Update();
+	}
 
 	// 左から来たボスの死亡アニメ完了でリザルト表示
 	if (m_boss && m_boss->IsDeathFinished() && m_boss->IsFromLeft())
@@ -264,6 +269,13 @@ void GameScene::Update()
 
 	// 敵弾 vs プレイヤー
 	CollisionManager::CheckEnemyBulletsVsPlayer(m_Enemies, m_player);
+
+	// 弾幕 vs プレイヤー
+	if (m_boss && m_player)
+	{
+		auto& danmakuBullets = m_boss->GetDanmakuBullets();
+		CollisionManager::CheckDanmakuVsPlayer(danmakuBullets, m_player);
+	}
 
 	// MobEnemy が逃げたらウェーブカウントを進める
 	for (auto& e : m_Enemies)
@@ -441,6 +453,9 @@ void GameScene::Draw()
 		auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(e);
 		if (shooter) shooter->DrawBullets();
 	}
+
+	// ボス弾幕（プレイヤーより上に描画）
+	if (m_boss) m_boss->DrawDanmaku();
 
 	EffectManager::Instance().Draw();
 

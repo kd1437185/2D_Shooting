@@ -21,6 +21,7 @@ void Boss::Init()
     m_nameAlpha = 0.0f;
     m_nameHoldTimer = 0;
     m_namePhase = NamePhase::None;
+    m_danmaku.Init();
 }
 
 void Boss::Spawn()
@@ -34,6 +35,8 @@ void Boss::Spawn()
     m_fromLeft = false;
     m_deathFinished = false;
     m_phase = Phase::Enter;
+    m_danmaku.Stop();
+    m_danmakuTimer = 0;
 }
 
 void Boss::TriggerDeath()
@@ -93,6 +96,50 @@ void Boss::Update()
 
     default: break;
     }
+
+    // 内部タイマーで弾幕制御・パターン切り替え
+    if (m_phase == Phase::Battle ||
+        m_phase == Phase::Attack1 ||
+        m_phase == Phase::Attack2)
+    {
+        m_danmakuTimer++;
+
+        // 最初の起動
+        if (!m_danmaku.IsActive() && m_danmakuTimer >= 60)
+        {
+            m_currentPattern = 1;
+            m_danmaku.SetPattern(m_currentPattern);
+            m_danmaku.Start();
+            m_patternTimer = 0;
+        }
+
+        // 一定時間でパターンを切り替え
+        if (m_danmaku.IsActive())
+        {
+            m_patternTimer++;
+            if (m_patternTimer >= 600)
+            {
+                m_patternTimer = 0;
+
+                // ランダムで次のパターンを選ぶ（同じパターンが連続しないように）
+                int next = m_currentPattern;
+                while (next == m_currentPattern)
+                {
+                    next = (rand() % 4) + 1;
+                }
+                m_currentPattern = next;
+                m_danmaku.SetPattern(m_currentPattern);
+            }
+        }
+    }
+    else
+    {
+        m_danmaku.Stop();
+        m_danmakuTimer = 0;
+    }
+
+    m_danmaku.SetFromLeft(m_fromLeft);
+    m_danmaku.Update(m_pos, m_playerPos);
 
     float scaleX = m_fromLeft ? AppConst::BOSS_SCALE : -AppConst::BOSS_SCALE;
     m_mat = Math::Matrix::CreateScale(scaleX, AppConst::BOSS_SCALE, 1.0f)
@@ -358,6 +405,7 @@ void Boss::Release()
     m_Attack2Tex.Release();
     m_DeathTex.Release();
     m_NameTex.Release();
+    m_danmaku.Release();
 
 }
 

@@ -261,6 +261,12 @@
     <ClInclude Include="Src\Application\Object\Bullet\EnemyBullet.h">
       <Filter>Src\Application\Object\Bullet</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Object\Bullet\DanmakuBullet.h">
+      <Filter>Src\Application\Object\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Object\Enemy\Boss\BossDanmaku.h">
+      <Filter>Src\Application\Object\Enemy\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -388,6 +394,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Bullet\EnemyBullet.cpp">
       <Filter>Src\Application\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Bullet\DanmakuBullet.cpp">
+      <Filter>Src\Application\Object\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Object\Enemy\Boss\BossDanmaku.cpp">
+      <Filter>Src\Application\Object\Enemy\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

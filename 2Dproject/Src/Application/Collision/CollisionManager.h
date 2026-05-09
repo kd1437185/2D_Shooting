@@ -7,6 +7,7 @@ class Boss;
 class EnemyBullet;
 class Player;
 class ShooterEnemy;
+class DanmakuBullet;
 
 class CollisionManager
 {
@@ -35,6 +36,10 @@ public:
 
     static void CheckEnemyBulletsVsPlayer(
         std::vector<std::shared_ptr<BaseObject>>& _enemies,
+        std::shared_ptr<Player>& _player);
+
+    static void CheckDanmakuVsPlayer(
+        std::vector<std::shared_ptr<DanmakuBullet>>& _bullets,
         std::shared_ptr<Player>& _player);
 
 };
