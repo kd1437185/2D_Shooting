@@ -16,13 +16,13 @@ const WaveType WaveManager::WAVE_ORDER[WAVE_ORDER_MAX] =
 // 各ウェーブで倒す必要がある敵の数
 const int WaveManager::WAVE_KILL_COUNT[WAVE_ORDER_MAX] =
 {
-    AppConst::ENEMY_MAX,    // MobEnemy: 5体
-    AppConst::SHOOTER_MAX,  // ShooterEnemy: 5体
-    AppConst::TANK_MAX,     // TankEnemy:    3体
-    AppConst::ENEMY_MAX,    // MobEnemy: 5体
-    AppConst::SHOOTER_MAX,  // ShooterEnemy: 5体
-    AppConst::TANK_MAX,     // TankEnemy:    3体
-    1                       // Boss（未実装・仮）
+    AppConst::MOB_MAX_WAVE1,  // フェーズ1 MobEnemy
+    AppConst::SHOOTER_MAX,
+    AppConst::TANK_MAX,
+    AppConst::MOB_MAX_WAVE4,  // フェーズ4 MobEnemy
+    AppConst::SHOOTER_MAX,
+    AppConst::TANK_MAX,
+    1                          // Boss
 };
 
 void WaveManager::Init()

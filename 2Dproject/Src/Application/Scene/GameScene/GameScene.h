@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../BaseScene/BaseScene.h"
-
+#include "Application/AppConst.h"
 #include "../../Background/ScrollBackground.h"
 
 class BaseObject;
@@ -45,5 +45,8 @@ private:
 	void SpawnShooterEnemy();
 	void SpawnTankEnemy();
 	
+	Math::Vector2 m_playerPos = {}; // プレイヤー位置キャッシュ
+
+	int m_mobMax = AppConst::MOB_MAX_WAVE1; // 現在のMobEnemy最大数
 
 };

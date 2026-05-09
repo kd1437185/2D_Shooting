@@ -2,7 +2,10 @@
 
 class BaseObject;
 class Bullet;
+class HomingBullet;
 class Boss;
+class EnemyBullet;
+class Player;
 
 class CollisionManager
 {
@@ -20,4 +23,17 @@ public:
     static void CheckBulletsVsBoss(
         std::vector<std::shared_ptr<Bullet>>& _bullets,
         std::shared_ptr<Boss>& _boss);
+
+    static void CheckHomingVsEnemies(
+        std::vector<std::shared_ptr<HomingBullet>>& _bullets,
+        std::vector<std::shared_ptr<BaseObject>>& _enemies);
+
+    static void CheckHomingVsBoss(
+        std::vector<std::shared_ptr<HomingBullet>>& _bullets,
+        std::shared_ptr<Boss>& _boss);
+
+    static void CheckEnemyBulletsVsPlayer(
+        std::vector<std::shared_ptr<BaseObject>>& _enemies,
+        std::shared_ptr<Player>& _player);
+
 };

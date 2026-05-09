@@ -35,12 +35,15 @@ void GameScene::Init()
 	m_Enemies.clear();
 
 	// MobEnemyをあらかじめ ENEMY_MAX 体プールとして生成
-	for (int i = 0; i < AppConst::ENEMY_MAX; i++)
+	for (int i = 0; i < AppConst::MOB_MAX_WAVE4; i++)
 	{
 		auto enemy = std::make_shared<MobEnemy>();
 		enemy->Init();
 		m_Enemies.push_back(enemy);
 	}
+	m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+	m_spawnedCount = 0;
+	m_mobMax = AppConst::MOB_MAX_WAVE1; // フェーズ1は8体
 
 	// タイマーをすぐ1体出るようにする
 	m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
@@ -80,6 +83,8 @@ void GameScene::Init()
 
 	EffectManager::Instance().Init();
 
+	// プレイヤーにターゲットリストを渡す
+	m_player->SetTargetLists(&m_Enemies, reinterpret_cast<std::shared_ptr<BaseObject>*>(&m_boss));
 }
 
 void GameScene::Update()
@@ -106,7 +111,6 @@ void GameScene::Update()
 	{
 		WaveManager::Instance().ResetWaveClear();
 
-		// 次のウェーブ用にカウンターをリセット
 		m_spawnedCount = 0;
 		m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
 		m_shooterSpawnedCount = 0;
@@ -115,13 +119,19 @@ void GameScene::Update()
 		m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
 		m_usedY.fill(false);
 		m_usedY2.fill(false);
+
+		// ウェーブに応じてMobEnemyの数を変更
+		int waveIndex = WaveManager::Instance().GetWaveIndex();
+		if (waveIndex == 3) // 4周目のMobEnemy
+		{
+			m_mobMax = AppConst::MOB_MAX_WAVE4;
+		}
 	}
 
 	// MobEnemy ウェーブのときだけスポーン
 	if (WaveManager::Instance().GetCurrentWave() == WaveType::MobEnemy)
 	{
-		// 合計 ENEMY_MAX 体出し切ったらスポーンしない
-		if (m_spawnedCount < AppConst::ENEMY_MAX)
+		if (m_spawnedCount < m_mobMax)
 		{
 			m_spawnTimer++;
 			if (m_spawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
@@ -196,10 +206,22 @@ void GameScene::Update()
 	// プレイヤー
 	if (m_player) m_player->Update();
 
+	// プレイヤー位置を更新（敵弾の目標位置として使用）
+	if (m_player) m_playerPos = m_player->GetPos();
+
 	// 敵
 	for (auto& e : m_Enemies)
 	{
-		if (e && e->IsAlive()) e->Update();
+		if (!e) continue;
+		auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
+		if (mob)
+		{
+			mob->Update(); // MobEnemy は aliveFlg に関係なく Update を呼ぶ
+		}
+		else if (e->IsAlive())
+		{
+			e->Update();
+		}
 	}
 
 	// 当たり判定
@@ -216,27 +238,35 @@ void GameScene::Update()
 		CollisionManager::CheckBulletsVsBoss(bullets, m_boss);
 	}
 
-	EffectManager::Instance().Update();
-
-	// 倒されたMobEnemyのY座標を解放
-	for (int i = 0; i < (int)m_Enemies.size(); i++)
+	// 当たり判定（ホーミング弾 vs 敵）
+	if (m_player)
 	{
-		auto mob = std::dynamic_pointer_cast<MobEnemy>(m_Enemies[i]);
-		if (!mob) continue;
-		if (mob->IsAlive()) continue;
-		if (mob->IsYReleased()) continue; // 解放済みならスキップ
-
-		for (int j = 0; j < 5; j++)
-		{
-			if (m_usedY[j] &&
-				fabsf(mob->GetPos().y - AppConst::ENEMY_Y_LIST[j]) < 1.0f)
-			{
-				m_usedY[j] = false;
-				mob->SetYReleased(true); // 解放済みにする
-				break;
-			}
-		}
+		auto& homings = m_player->GetHomingBullets();
+		CollisionManager::CheckHomingVsEnemies(homings, m_Enemies);
 	}
+
+	// 当たり判定（ホーミング弾 vs ボス）
+	if (m_player && m_boss)
+	{
+		auto& homings = m_player->GetHomingBullets();
+		CollisionManager::CheckHomingVsBoss(homings, m_boss);
+	}
+
+	// 敵弾 vs プレイヤー
+	CollisionManager::CheckEnemyBulletsVsPlayer(m_Enemies, m_player);
+
+	// MobEnemy が逃げたらウェーブカウントを進める
+	for (auto& e : m_Enemies)
+	{
+		auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
+		if (!mob) continue;
+		if (!mob->IsEscaped()) continue;
+
+		mob->ResetEscaped();
+		WaveManager::Instance().OnEnemyDefeated();
+	}
+
+	EffectManager::Instance().Update();
 
 	// 倒された ShooterEnemy のY座標を解放
 	for (int i = 0; i < (int)m_Enemies.size(); i++)
@@ -317,7 +347,6 @@ void GameScene::Update()
 
 void GameScene::SpawnEnemy()
 {
-	// 非アクティブな敵を探す
 	std::shared_ptr<MobEnemy> target = nullptr;
 	for (auto& e : m_Enemies)
 	{
@@ -329,22 +358,16 @@ void GameScene::SpawnEnemy()
 	}
 	if (!target) return;
 
-	// 使われていないY座標インデックスをランダムに選ぶ
-	std::vector<int> availableY;
-	for (int i = 0; i < 5; i++)
+	// フェーズ1（waveIndex==0）は右からのみ、それ以降はランダム
+	bool fromRight = true;
+	if (WaveManager::Instance().GetWaveIndex() >= 3)
 	{
-		if (!m_usedY[i]) availableY.push_back(i);
+		fromRight = (rand() % 2 == 0);
 	}
-	if (availableY.empty()) return;
 
-	int randIdx = availableY[rand() % availableY.size()];
-	m_usedY[randIdx] = true;
-
-	float spawnX = AppConst::SCREEN_HALF_W + AppConst::ENEMY_SCALED_W;
-	float spawnY = AppConst::ENEMY_Y_LIST[randIdx];
-	target->Spawn(spawnX, spawnY);
-
-	m_spawnedCount++; // 出現数をカウント
+	if (m_player) m_playerPos = m_player->GetPos();
+	target->Spawn(fromRight, &m_playerPos);
+	m_spawnedCount++;
 }
 
 void GameScene::SpawnShooterEnemy()
@@ -417,6 +440,13 @@ void GameScene::Draw()
 	if (m_player)
 	{
 		m_player->Draw();
+	}
+
+	// 敵弾（プレイヤーより上に描画）
+	for (auto& e : m_Enemies)
+	{
+		auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
+		if (mob) mob->DrawBullets();
 	}
 
 	EffectManager::Instance().Draw();

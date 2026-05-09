@@ -19,14 +19,35 @@ void Bullet::Fire(Math::Vector2 _startPos, float _direction, int _damage)
     m_animTimer = 0;
 }
 
+void Bullet::FireAngle(Math::Vector2 _startPos, float _velX, float _velY, int _damage)
+{
+    m_pos = _startPos;
+    m_aliveFlg = true;
+    m_damage = _damage;
+    m_velX = _velX * AppConst::BULLET_SPEED;
+    m_velY = _velY * AppConst::BULLET_SPEED;
+    m_direction = (_velX >= 0) ? 1.0f : -1.0f;
+}
+
 void Bullet::Update()
 {
     if (!m_aliveFlg) return;
 
-    m_pos.x += AppConst::BULLET_SPEED * m_direction;
+    // FireAngle ‚Å”­ŽË‚³‚ê‚½ê‡‚Í velX/velY ‚ðŽg‚¤
+    if (m_velX != 0.0f || m_velY != 0.0f)
+    {
+        m_pos.x += m_velX;
+        m_pos.y += m_velY;
+    }
+    else
+    {
+        m_pos.x += AppConst::BULLET_SPEED * m_direction;
+    }
 
     if (m_pos.x > AppConst::SCREEN_HALF_W + AppConst::BULLET_SCALED_W ||
-        m_pos.x < -AppConst::SCREEN_HALF_W - AppConst::BULLET_SCALED_W)
+        m_pos.x < -AppConst::SCREEN_HALF_W - AppConst::BULLET_SCALED_W ||
+        m_pos.y >  AppConst::SCREEN_HALF_H + 100 ||
+        m_pos.y < -AppConst::SCREEN_HALF_H - 100)
     {
         m_aliveFlg = false;
     }

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../BaseObject.h"
+#include "../../AppConst.h"
 
 class Bullet;   // 前方宣言
+class HomingBullet;
 
 class Player : public BaseObject
 {
@@ -19,6 +21,14 @@ public:
 	// GameScene から弾リストを取得して当たり判定に使う
 	std::vector<std::shared_ptr<Bullet>>& GetBullets() { return m_Bullets; }
 
+	std::vector<std::shared_ptr<HomingBullet>>& GetHomingBullets() { return m_HomingBullets; }
+	void SetTargetLists(std::vector<std::shared_ptr<BaseObject>>* _enemies,
+		std::shared_ptr<BaseObject>* _boss)
+	{
+		m_enemies = _enemies;
+		m_boss = _boss;
+	}
+
 	int  GetBulletDamage() const { return m_bulletDamage; }
 	void UpgradeBullet();        // 弾を強化
 	int  GetBulletLevel() const { return m_bulletLevel; }
@@ -27,22 +37,27 @@ public:
 	bool IsEntering() const { return m_isEntering; }
 
 private:
+
 	void Shot();
+	void ShotLv1();
+	void ShotLv2();
+	void ShotLv3();
+	void ShotLv4();
 
 	std::vector<std::shared_ptr<Bullet>> m_Bullets;
+	std::vector<std::shared_ptr<HomingBullet>> m_HomingBullets;
 
-	// 連射間隔タイマー
-	int  m_shotTimer = 0; 
+	std::vector<std::shared_ptr<BaseObject>>* m_enemies = nullptr;
+	std::shared_ptr<BaseObject>* m_boss = nullptr;
 
-	// 向いている方向（1.0f = 右、-1.0f = 左）
-	float m_direction = 1.0f;
-
-	int m_bulletDamage = 10;
+	int  m_shotTimer = 0; // 連射間隔タイマー
+	float m_direction = 1.0f;// 向いている方向（1.0f = 右、-1.0f = 左）
+	bool  m_prevZ = false;
+	int m_bulletDamage = AppConst::BULLET_DAMAGE_LV1;
 	int m_bulletLevel = 1;
-
 	int   m_animFrame = 0;
 	int   m_animTimer = 0;
-
 	bool m_isEntering = false; // 入場中フラグ
+	int m_homingTimer = 0; // ホーミング弾の発射間隔タイマー
 
 };

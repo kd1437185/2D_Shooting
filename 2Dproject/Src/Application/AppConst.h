@@ -8,6 +8,10 @@ namespace AppConst
     static const float SCREEN_HALF_W = 640.0f;
     static const float SCREEN_HALF_H = 360.0f;
 
+    // MobEnemy 出現数（ウェーブごと）
+    static const int MOB_MAX_WAVE1 = 8;   // フェーズ1（調整可）
+    static const int MOB_MAX_WAVE4 = 10;  // フェーズ4・2周目MobEnemy（調整可）
+
     // タイトルロゴ
     static const int   LOGO_W = 536;
     static const int   LOGO_H = 357;
@@ -38,12 +42,28 @@ namespace AppConst
     static const float ENEMY_SCALED_H       = ENEMY_H * ENEMY_SCALE;  // 48
     static const int   ENEMY_ANIM_MAX       = 10;    // アニメーションコマ数
     static const int   ENEMY_ANIM_SPEED     = 6;     // 何フレームで1コマ進むか
-    static const float ENEMY_SPEED          = 5.0f;
+    static const float ENEMY_SPEED          = 2.0f;
     static const int   ENEMY_MAX            = 5;      // 最大同時出現数
     static const int   ENEMY_SPAWN_INTERVAL = 60; // 1秒（60fps × 1）
 
     // 敵のY座標候補（5か所）
     static const float ENEMY_Y_LIST[5] = { 200.0f, 100.0f, 0.0f, -100.0f, -200.0f };
+
+    // MobEnemy 改造版
+    static const float MOB_ENTER_SPEED = 4.0f;   // 侵入速度（調整可）
+    static const float MOB_SLOW_SPEED = 1.0f;   // 減速後の速度（調整可）
+    static const int   MOB_SLOW_DURATION = 60;     // 減速時間（フレーム）
+    static const float MOB_ANGLE = 30.0f;  // 侵入角度（度・調整可）
+    static const float MOB_SPAWN_X_MARGIN = 200.0f; // 画面端からのX余白（調整可）
+
+    // 敵弾
+    static const int   ENEMY_BULLET_W = 24;
+    static const int   ENEMY_BULLET_H = 24;
+    static const float ENEMY_BULLET_SCALE = 1.0f;   // 調整可
+    static const float ENEMY_BULLET_ALPHA = 1.0f;   // 調整可
+    static const float ENEMY_BULLET_SPEED = 3.0f;   // 調整可
+    static const float ENEMY_BULLET_RADIUS = 8.0f;
+    static const int   ENEMY_BULLET_MAX = 20;     // 同時出現最大数
 
     // ShooterEnemy
     static const int   SHOOTER_W           = 32;
@@ -91,15 +111,34 @@ namespace AppConst
     static const float BULLET_SCALED_W = 121.5f; // 243 * 0.5
     static const int   BULLET_SIZE = 20;
     static const float BULLET_RADIUS = 10.0f;
-    static const float BULLET_ALPHA = 0.6f; // アルファ値
+    static const float BULLET_ALPHA = 0.2f; // アルファ値
     static const float BULLET_SPEED = 20.0f;
     static const int   BULLET_MAX = 100; // 同時に出せる最大数
 
     // 弾のダメージ
     static const int BULLET_DAMAGE_LV1 = 10;  // レベル1
-    static const int BULLET_DAMAGE_LV2 = 25;  // レベル2
-    static const int BULLET_DAMAGE_LV3 = 50;  // レベル3
-    static const int BULLET_DAMAGE_LV4 = 100; // レベル4（最大）
+    static const int BULLET_DAMAGE_LV2 = 20;  // レベル2
+    static const int BULLET_DAMAGE_LV3 = 30;  // レベル3
+    static const int BULLET_DAMAGE_LV4 = 40; // レベル4（最大）
+
+    // 弾レベル設定
+    static const float BULLET_LV2_OFFSET_Y = 20.0f;  // Lv2の上下オフセット（調整可）
+    static const float BULLET_LV3_ANGLE = 4.0f;  // Lv3の3WAY角度（度数・調整可）
+
+    // ホーミング弾
+   // ホーミング弾
+    static const int   HOMING_W = 24;
+    static const int   HOMING_H = 24;
+    static const int   HOMING_ANIM_MAX = 8;
+    static const int   HOMING_ANIM_SPEED = 3;     // アニメ速度（調整可）
+    static const float HOMING_SCALE = 2.0f;  // 倍率（調整可）
+    static const float HOMING_ALPHA = 0.2f;  // アルファ値（調整可）
+    static const float HOMING_SPEED = 15.0f;  // 速度（調整可）
+    static const float HOMING_TURN_SPEED = 0.08f; // 旋回速度（調整可）
+    static const int   HOMING_MAX = 20;
+    static const int   HOMING_DAMAGE = 30;    // ダメージ（調整可）
+    static const int   HOMING_LIFETIME = 60;   // 生存時間（フレーム・調整可）2秒=120
+    static const int   HOMING_INTERVAL = 4;    // 発射間隔（フレーム・調整可）
 
     // 当たり判定の半径
     static const float ENEMY_RADIUS = ENEMY_SCALED_W / 2.0f;  // 22.0f

@@ -167,6 +167,8 @@
     <ClInclude Include="Src\Application\Health\HealthManager.h" />
     <ClInclude Include="Src\Application\Object\BaseObject.h" />
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h" />
+    <ClInclude Include="Src\Application\Object\Bullet\EnemyBullet.h" />
+    <ClInclude Include="Src\Application\Object\Bullet\HomingBullet.h" />
     <ClInclude Include="Src\Application\Object\Enemy\Boss\Boss.h" />
     <ClInclude Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.h" />
     <ClInclude Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.h" />
@@ -211,6 +213,8 @@
     <ClCompile Include="Src\Application\Health\HealthManager.cpp" />
     <ClCompile Include="Src\Application\Object\BaseObject.cpp" />
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp" />
+    <ClCompile Include="Src\Application\Object\Bullet\EnemyBullet.cpp" />
+    <ClCompile Include="Src\Application\Object\Bullet\HomingBullet.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\Boss\Boss.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\MobEnemy\MobEnemy.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.cpp" />

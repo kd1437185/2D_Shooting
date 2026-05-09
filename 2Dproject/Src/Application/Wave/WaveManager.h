@@ -29,6 +29,8 @@ public:
 
     void ResetWaveClear() { m_waveClear = false; }
 
+    int GetWaveIndex() const { return m_waveIndex; }
+
     // ƒVƒ“ƒOƒ‹ƒgƒ“
 private:
     WaveManager() {}
