@@ -216,12 +216,22 @@ void GameScene::Update()
 		auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
 		if (mob)
 		{
-			mob->Update(); // MobEnemy は aliveFlg に関係なく Update を呼ぶ
+			mob->Update(); // MobEnemy は常に Update
+			continue;
 		}
-		else if (e->IsAlive())
+		auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(e);
+		if (shooter)
 		{
-			e->Update();
+			shooter->Update(); // ShooterEnemy も常に Update
+			continue;
 		}
+		auto tank = std::dynamic_pointer_cast<TankEnemy>(e);
+		if (tank) 
+		{
+			tank->Update(); 
+			continue; 
+		}
+		if (e->IsAlive()) e->Update();
 	}
 
 	// 当たり判定
@@ -268,26 +278,6 @@ void GameScene::Update()
 
 	EffectManager::Instance().Update();
 
-	// 倒された ShooterEnemy のY座標を解放
-	for (int i = 0; i < (int)m_Enemies.size(); i++)
-	{
-		auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(m_Enemies[i]);
-		if (!shooter) continue;
-		if (shooter->IsAlive()) continue;
-		if (shooter->IsYReleased()) continue;
-
-		for (int j = 0; j < 5; j++)
-		{
-			if (m_usedY2[j] &&
-				fabsf(shooter->GetPos().y - AppConst::ENEMY_Y_LIST[j]) < 1.0f)
-			{
-				m_usedY2[j] = false;
-				shooter->SetYReleased(true);
-				break;
-			}
-		}
-	}
-
 	// Uキーで弾を強化（テスト用）
 	static bool prevU = false;
 	bool nowU = GetAsyncKeyState('U') & 0x8000;
@@ -316,12 +306,12 @@ void GameScene::Update()
 		m_usedY.fill(false);
 		m_usedY2.fill(false);
 
-		// スポーンカウンターを最大値にして次のウェーブへ
+		// 現在のウェーブの残り数を全部カウントして次へ
 		int killCount = 0;
 		switch (WaveManager::Instance().GetCurrentWave())
 		{
 		case WaveType::MobEnemy:
-			killCount = AppConst::ENEMY_MAX - WaveManager::Instance().GetDefeatedCount();
+			killCount = m_mobMax - WaveManager::Instance().GetDefeatedCount();
 			break;
 		case WaveType::Enemy2:
 			killCount = AppConst::SHOOTER_MAX - WaveManager::Instance().GetDefeatedCount();
@@ -350,7 +340,7 @@ void GameScene::SpawnEnemy()
 	std::shared_ptr<MobEnemy> target = nullptr;
 	for (auto& e : m_Enemies)
 	{
-		if (e && !e->IsAlive())
+		if (e && !e->IsAlive() && !e->IsFading())
 		{
 			target = std::dynamic_pointer_cast<MobEnemy>(e);
 			if (target) break;
@@ -375,7 +365,7 @@ void GameScene::SpawnShooterEnemy()
 	std::shared_ptr<ShooterEnemy> target = nullptr;
 	for (auto& e : m_Enemies)
 	{
-		if (e && !e->IsAlive())
+		if (e && !e->IsAlive() && !e->IsFading())
 		{
 			target = std::dynamic_pointer_cast<ShooterEnemy>(e);
 			if (target) break;
@@ -383,20 +373,14 @@ void GameScene::SpawnShooterEnemy()
 	}
 	if (!target) return;
 
-	std::vector<int> availableY;
-	for (int i = 0; i < 5; i++)
-	{
-		if (!m_usedY2[i]) availableY.push_back(i);
-	}
-	if (availableY.empty()) return;
-
-	int randIdx = availableY[rand() % availableY.size()];
-	m_usedY2[randIdx] = true;
-
 	float spawnX = AppConst::SCREEN_HALF_W + AppConst::SHOOTER_SCALED_W;
-	float spawnY = AppConst::ENEMY_Y_LIST[randIdx];
-	target->Spawn(spawnX, spawnY);
 
+	// 1体目は上、2体目は下から出す
+	float spawnY = (m_shooterSpawnedCount % 2 == 0)
+		? AppConst::SCREEN_HALF_H + AppConst::SHOOTER_SCALED_H   // 上
+		: -(AppConst::SCREEN_HALF_H + AppConst::SHOOTER_SCALED_H); // 下
+
+	target->Spawn(spawnX, spawnY);
 	m_shooterSpawnedCount++;
 }
 
@@ -406,7 +390,7 @@ void GameScene::SpawnTankEnemy()
 	std::shared_ptr<TankEnemy> target = nullptr;
 	for (auto& e : m_Enemies)
 	{
-		if (e && !e->IsAlive())
+		if (e && !e->IsAlive() && !e->IsFading())
 		{
 			target = std::dynamic_pointer_cast<TankEnemy>(e);
 			if (target) break;
@@ -430,10 +414,13 @@ void GameScene::Draw()
 	// ボス
 	if (m_boss && m_boss->IsAlive()) m_boss->Draw();
 
+	// ボス名前
+	if (m_boss) m_boss->DrawName();
+
 	// モブエネミー
 	for (auto& e : m_Enemies)
 	{
-		if (e && e->IsAlive()) e->Draw(); // IsAlive() チェック追加
+		if(e && (e->IsAlive() || e->IsFading())) e->Draw();
 	}
 
 	// プレイヤー
@@ -445,8 +432,14 @@ void GameScene::Draw()
 	// 敵弾（プレイヤーより上に描画）
 	for (auto& e : m_Enemies)
 	{
+		auto tank = std::dynamic_pointer_cast<TankEnemy>(e);
+		if (tank) tank->DrawBullets();
+
 		auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
 		if (mob) mob->DrawBullets();
+
+		auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(e);
+		if (shooter) shooter->DrawBullets();
 	}
 
 	EffectManager::Instance().Draw();

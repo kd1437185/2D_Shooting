@@ -47,6 +47,8 @@ public:
 
     void ResetDeathFinished() { m_deathFinished = false; }
 
+    void DrawName();
+
 private:
     void UpdateEnter();
     void UpdateIdleBefore();
@@ -75,4 +77,18 @@ private:
     bool m_deathFinished = false;
 
     Phase m_phase = Phase::Enter;
+
+    KdTexture m_NameTex;
+    float     m_nameAlpha = 0.0f;
+    int       m_nameHoldTimer = 0;
+    bool      m_nameVisible = false; // 名前表示フラグ
+
+    enum class NamePhase
+    {
+        None,
+        FadeIn,
+        Hold,
+        FadeOut
+    };
+    NamePhase m_namePhase = NamePhase::None;
 };

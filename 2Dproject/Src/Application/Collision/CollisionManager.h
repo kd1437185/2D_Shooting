@@ -6,6 +6,7 @@ class HomingBullet;
 class Boss;
 class EnemyBullet;
 class Player;
+class ShooterEnemy;
 
 class CollisionManager
 {

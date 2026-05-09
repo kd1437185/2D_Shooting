@@ -28,6 +28,9 @@ void MobEnemy::Spawn(bool _fromRight, Math::Vector2* _playerPos)
     m_phaseTimer = 0;
     m_phase = Phase::Enter;
     m_yReleased = false;
+    m_escaped = false;
+    m_isFading = false;
+    m_alpha = 1.0f;
 
     // 上から来るか下から来るかをランダムに決定
     m_fromTop = (rand() % 2 == 0);
@@ -78,6 +81,13 @@ void MobEnemy::Update()
     for (auto& b : m_Bullets)
     {
         if (b) b->Update();
+    }
+
+    // フェードアウト中
+    if (m_isFading)
+    {
+        UpdateFade();
+        return;
     }
 
     if (!m_aliveFlg) return; // 敵本体は死んでいたらここで終了
@@ -194,7 +204,7 @@ void MobEnemy::Draw()
     };
 
     SHADER.m_spriteShader.SetMatrix(m_mat);
-    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, 1.0f);
+    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, m_alpha);
 }
 
 void MobEnemy::DrawBullets()
@@ -213,4 +223,14 @@ void MobEnemy::Release()
         if (b) b->Release();
     }
     m_Bullets.clear();
+}
+
+void MobEnemy::Damage(int _amount)
+{
+    m_hp -= _amount;
+    if (m_hp <= 0)
+    {
+        m_hp = 0;
+        StartFadeOut(); // フェードアウト開始
+    }
 }

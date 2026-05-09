@@ -33,7 +33,8 @@ void CollisionManager::CheckBulletsVsEnemies(
 
         for (auto& enemy : _enemies)
         {
-            if (!enemy || !enemy->IsAlive()) continue;
+            // フェード中・非アクティブはスキップ
+            if (!enemy || !enemy->IsAlive() || enemy->IsFading()) continue;
 
             float radius = AppConst::ENEMY_RADIUS;
             if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
@@ -46,10 +47,11 @@ void CollisionManager::CheckBulletsVsEnemies(
                 enemy->GetPos(), radius))
             {
                 bullet->SetAlive(false);
-                enemy->Damage(bullet->GetDamage()); // Bulletのダメージを使用
+                enemy->Damage(bullet->GetDamage());
                 EffectManager::Instance().PlayHitEffect(bullet->GetPos());
 
-                if (enemy->IsDead())
+                // フェードアウト開始 = 死亡
+                if (enemy->IsFading())
                 {
                     if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
@@ -65,7 +67,6 @@ void CollisionManager::CheckBulletsVsEnemies(
     }
 }
 
-// ボス専用の当たり判定
 void CollisionManager::CheckBulletsVsBoss(
     std::vector<std::shared_ptr<Bullet>>& _bullets,
     std::shared_ptr<Boss>& _boss)
@@ -88,7 +89,6 @@ void CollisionManager::CheckBulletsVsBoss(
             if (_boss->IsDead())
             {
                 ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
-                // TriggerDeath は Boss::Damage() 内で呼ばれるので不要
             }
         }
     }
@@ -101,9 +101,11 @@ void CollisionManager::CheckHomingVsEnemies(
     for (auto& bullet : _bullets)
     {
         if (!bullet || !bullet->IsAlive()) continue;
+
         for (auto& enemy : _enemies)
         {
-            if (!enemy || !enemy->IsAlive()) continue;
+            // フェード中・非アクティブはスキップ
+            if (!enemy || !enemy->IsAlive() || enemy->IsFading()) continue;
 
             float radius = AppConst::ENEMY_RADIUS;
             if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
@@ -118,7 +120,8 @@ void CollisionManager::CheckHomingVsEnemies(
                 bullet->SetAlive(false);
                 enemy->Damage(bullet->GetDamage());
                 EffectManager::Instance().PlayHitEffect(bullet->GetPos());
-                if (enemy->IsDead())
+
+                if (enemy->IsFading())
                 {
                     if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
@@ -126,6 +129,7 @@ void CollisionManager::CheckHomingVsEnemies(
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
                     else
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+
                     WaveManager::Instance().OnEnemyDefeated();
                 }
             }
@@ -143,6 +147,7 @@ void CollisionManager::CheckHomingVsBoss(
     for (auto& bullet : _bullets)
     {
         if (!bullet || !bullet->IsAlive()) continue;
+
         if (CircleCollision(
             bullet->GetPos(), AppConst::BULLET_RADIUS,
             _boss->GetPos(), AppConst::BOSS_RADIUS))
@@ -150,6 +155,7 @@ void CollisionManager::CheckHomingVsBoss(
             bullet->SetAlive(false);
             _boss->Damage(bullet->GetDamage());
             EffectManager::Instance().PlayHitEffect(bullet->GetPos());
+
             if (_boss->IsDead())
             {
                 ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
@@ -166,19 +172,56 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
 
     for (auto& e : _enemies)
     {
+        // MobEnemy
         auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
-        if (!mob) continue;
-
-        for (auto& b : mob->GetBullets())
+        if (mob)
         {
-            if (!b || !b->IsAlive()) continue;
-
-            if (CircleCollision(
-                b->GetPos(), AppConst::ENEMY_BULLET_RADIUS,
-                _player->GetPos(), AppConst::PLAYER_RADIUS))
+            for (auto& b : mob->GetBullets())
             {
-                b->SetAlive(false);
-                HealthManager::Instance().Damage(); // 残機を1減らす
+                if (!b || !b->IsAlive()) continue;
+                if (CircleCollision(
+                    b->GetPos(), AppConst::ENEMY_BULLET_RADIUS,
+                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                {
+                    b->SetAlive(false);
+                    HealthManager::Instance().Damage();
+                }
+            }
+            continue;
+        }
+
+        // ShooterEnemy
+        auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(e);
+        if (shooter)
+        {
+            for (auto& b : shooter->GetBullets())
+            {
+                if (!b || !b->IsAlive()) continue;
+                if (CircleCollision(
+                    b->GetPos(), AppConst::ENEMY_BULLET_RADIUS,
+                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                {
+                    b->SetAlive(false);
+                    HealthManager::Instance().Damage();
+                }
+            }
+            continue;
+        }
+
+        // TankEnemy
+        auto tank = std::dynamic_pointer_cast<TankEnemy>(e);
+        if (tank)
+        {
+            for (auto& b : tank->GetBullets())
+            {
+                if (!b || !b->IsAlive()) continue;
+                if (CircleCollision(
+                    b->GetPos(), AppConst::TANK_BULLET_RADIUS,
+                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                {
+                    b->SetAlive(false);
+                    HealthManager::Instance().Damage();
+                }
             }
         }
     }

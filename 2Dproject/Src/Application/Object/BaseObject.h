@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Application/AppConst.h"
+
 // 全てのゲーム内オブジェクトの基底クラス
 class BaseObject
 {
@@ -25,6 +27,22 @@ public:
 	int  GetMaxHp()    const { return m_maxHp; }
 	bool IsDead()      const { return m_hp <= 0; }
 
+	void StartFadeOut() { m_isFading = true; m_alpha = 1.0f; }
+	bool IsFading()  const { return m_isFading; }
+	float GetAlpha() const { return m_alpha; }
+
+	void UpdateFade()
+	{
+		if (!m_isFading) return;
+		m_alpha -= AppConst::FADE_SPEED;
+		if (m_alpha <= 0.0f)
+		{
+			m_alpha = 0.0f;
+			m_isFading = false;
+			m_aliveFlg = false;
+		}
+	}
+
 protected:
 
 	KdTexture		m_tex;			// テクスチャ
@@ -35,4 +53,6 @@ protected:
 	int m_hp = 1;
 	int m_maxHp = 1;
 
+	bool  m_isFading = false;
+	float m_alpha = 1.0f;
 };

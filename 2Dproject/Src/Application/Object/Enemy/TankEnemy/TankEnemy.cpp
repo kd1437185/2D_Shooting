@@ -8,7 +8,14 @@ void TankEnemy::Init()
     m_animFrame = 0;
     m_animTimer = 0;
     m_phase = Phase::Drop;
-    SetHp(AppConst::TANK_HP);
+
+    for (int i = 0; i < AppConst::TANK_BULLET_MAX; i++)
+    {
+        auto b = std::make_shared<EnemyBullet>();
+        b->InitWithTex("Texture/Bullet/Enemy_bigbullet_red.png");
+        b->SetTexSize(AppConst::TANK_BULLET_W, AppConst::TANK_BULLET_H);
+        m_Bullets.push_back(b);
+    }
 }
 
 void TankEnemy::Spawn(float _x, float _stopY)
@@ -19,11 +26,26 @@ void TankEnemy::Spawn(float _x, float _stopY)
     m_phase = Phase::Drop;
     m_animFrame = 0;
     m_animTimer = 0;
+    m_shotTimer = AppConst::TANK_SHOT_INTERVAL; // すぐ撃てるように
     SetHp(AppConst::TANK_HP);
+    m_isFading = false;
+    m_alpha = 1.0f;
 }
 
 void TankEnemy::Update()
 {
+    // 弾は常に更新
+    for (auto& b : m_Bullets)
+    {
+        if (b) b->Update();
+    }
+
+    if (m_isFading)
+    {
+        UpdateFade();
+        return;
+    }
+
     if (!m_aliveFlg) return;
 
     // アニメーション更新
@@ -36,38 +58,65 @@ void TankEnemy::Update()
 
     switch (m_phase)
     {
-    case Phase::Drop:
-        // 上から下に落下（Y座標を減少）
-        m_pos.y -= AppConst::TANK_DROP_SPEED;
-
-        // 停止Y座標に達したら上昇フェーズへ
-        if (m_pos.y <= m_stopY)
-        {
-            m_pos.y = m_stopY;
-            m_riseStartY = m_pos.y;
-            m_phase = Phase::Rise;
-        }
-        break;
-
-    case Phase::Rise:
-        // 少し上昇（Y座標を増加）
-        m_pos.y += AppConst::TANK_RISE_SPEED;
-
-        // 上昇量に達したら停止フェーズへ
-        if (m_pos.y >= m_riseStartY + AppConst::TANK_RISE_AMOUNT)
-        {
-            m_pos.y = m_riseStartY + AppConst::TANK_RISE_AMOUNT;
-            m_phase = Phase::Stay;
-        }
-        break;
-
-    case Phase::Stay:
-        // その場に留まる
-        break;
+    case Phase::Drop: UpdateDrop(); break;
+    case Phase::Rise: UpdateRise(); break;
+    case Phase::Stay: UpdateStay(); break;
     }
 
-    m_mat = Math::Matrix::CreateScale(AppConst::TANK_SCALE, AppConst::TANK_SCALE, 1.0f)
+    m_mat = Math::Matrix::CreateScale(
+        AppConst::TANK_SCALE, AppConst::TANK_SCALE, 1.0f)
         * Math::Matrix::CreateTranslation(m_pos.x, m_pos.y, 0);
+}
+
+void TankEnemy::UpdateDrop()
+{
+    m_pos.y -= AppConst::TANK_DROP_SPEED;
+
+    if (m_pos.y <= m_stopY)
+    {
+        m_pos.y = m_stopY;
+        m_riseStartY = m_pos.y;
+        m_phase = Phase::Rise;
+    }
+}
+
+void TankEnemy::UpdateRise()
+{
+    m_pos.y += AppConst::TANK_RISE_SPEED;
+
+    if (m_pos.y >= m_riseStartY + AppConst::TANK_RISE_AMOUNT)
+    {
+        m_pos.y = m_riseStartY + AppConst::TANK_RISE_AMOUNT;
+        m_phase = Phase::Stay;
+    }
+}
+
+void TankEnemy::UpdateStay()
+{
+    m_shotTimer++;
+    if (m_shotTimer >= AppConst::TANK_SHOT_INTERVAL)
+    {
+        m_shotTimer = 0;
+        Shot();
+    }
+}
+
+void TankEnemy::Shot()
+{
+    for (auto& b : m_Bullets)
+    {
+        if (b && !b->IsAlive())
+        {
+            // 左に向かって低速で、少しずつ下に落ちる
+            b->FireWithGravity(
+                m_pos,
+                -AppConst::TANK_BULLET_SPEED,  // 左に進む
+                0.0f,                           // 初期Y速度
+                AppConst::TANK_BULLET_FALL      // 重力
+            );
+            return;
+        }
+    }
 }
 
 void TankEnemy::Draw()
@@ -83,10 +132,33 @@ void TankEnemy::Draw()
     };
 
     SHADER.m_spriteShader.SetMatrix(m_mat);
-    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, 1.0f);
+    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, m_alpha);
+}
+
+void TankEnemy::DrawBullets()
+{
+    for (auto& b : m_Bullets)
+    {
+        if (b && b->IsAlive()) b->Draw();
+    }
 }
 
 void TankEnemy::Release()
 {
     m_tex.Release();
+    for (auto& b : m_Bullets)
+    {
+        if (b) b->Release();
+    }
+    m_Bullets.clear();
+}
+
+void TankEnemy::Damage(int _amount)
+{
+    m_hp -= _amount;
+    if (m_hp <= 0)
+    {
+        m_hp = 0;
+        StartFadeOut();
+    }
 }

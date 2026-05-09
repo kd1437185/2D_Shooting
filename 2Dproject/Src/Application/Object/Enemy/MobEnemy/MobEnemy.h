@@ -26,6 +26,7 @@ public:
 
     bool IsEscaped() const { return m_escaped; }
     void ResetEscaped() { m_escaped = false; }
+    void Damage(int _amount) override;
 
 private:
     enum class Phase

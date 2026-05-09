@@ -17,6 +17,10 @@ void Boss::Init()
     m_fromLeft = false;
     m_phase = Phase::Enter;
     SetHp(AppConst::BOSS_HP);
+    m_NameTex.Load("Texture/Enemy/Boss/bossname.png");
+    m_nameAlpha = 0.0f;
+    m_nameHoldTimer = 0;
+    m_namePhase = NamePhase::None;
 }
 
 void Boss::Spawn()
@@ -47,19 +51,50 @@ void Boss::Update()
 
     switch (m_phase)
     {
-    case Phase::Enter:         UpdateEnter();         break;
-    case Phase::IdleBefore:    UpdateIdleBefore();    break;
-    case Phase::Transform:     UpdateTransform();     break;
-    case Phase::Battle:        UpdateBattle();        break;
-    case Phase::Attack1:       UpdateAttack1();       break;
-    case Phase::Attack2:       UpdateAttack2();       break;
-    case Phase::Death:         UpdateDeath();         break;
+    case Phase::Enter:      UpdateEnter();      break;
+    case Phase::IdleBefore: UpdateIdleBefore(); break;
+    case Phase::Transform:  UpdateTransform();  break;
+    case Phase::Battle:     UpdateBattle();     break;
+    case Phase::Attack1:    UpdateAttack1();    break;
+    case Phase::Attack2:    UpdateAttack2();    break;
+    case Phase::Death:      UpdateDeath();      break;
     case Phase::EnterFromLeft: UpdateEnterFromLeft(); break;
     }
 
-    // m_fromLeft が true のままなら反転なし、false なら反転あり
-    float scaleX = m_fromLeft ? AppConst::BOSS_SCALE : -AppConst::BOSS_SCALE;
+    // 名前のアルファ更新
+    switch (m_namePhase)
+    {
+    case NamePhase::FadeIn:
+        m_nameAlpha += AppConst::BOSS_NAME_FADE_IN;
+        if (m_nameAlpha >= 1.0f)
+        {
+            m_nameAlpha = 1.0f;
+            m_nameHoldTimer = 0;
+            m_namePhase = NamePhase::Hold;
+        }
+        break;
 
+    case NamePhase::Hold:
+        m_nameHoldTimer++;
+        if (m_nameHoldTimer >= AppConst::BOSS_NAME_HOLD)
+        {
+            m_namePhase = NamePhase::FadeOut;
+        }
+        break;
+
+    case NamePhase::FadeOut:
+        m_nameAlpha -= AppConst::BOSS_NAME_FADE_OUT;
+        if (m_nameAlpha <= 0.0f)
+        {
+            m_nameAlpha = 0.0f;
+            m_namePhase = NamePhase::None;
+        }
+        break;
+
+    default: break;
+    }
+
+    float scaleX = m_fromLeft ? AppConst::BOSS_SCALE : -AppConst::BOSS_SCALE;
     m_mat = Math::Matrix::CreateScale(scaleX, AppConst::BOSS_SCALE, 1.0f)
         * Math::Matrix::CreateTranslation(m_pos.x, m_pos.y, 0);
 }
@@ -110,6 +145,14 @@ void Boss::UpdateTransform()
             m_animFrame = 0;
             m_attackTimer = AppConst::BOSS_ATTACK_INTERVAL;
             m_phase = Phase::Battle;
+
+            // 右から来たボスのみ名前を表示
+            if (!m_fromLeft)
+            {
+                m_namePhase = NamePhase::FadeIn;
+                m_nameAlpha = 0.0f;
+                m_nameHoldTimer = 0;
+            }
         }
     }
 }
@@ -314,6 +357,7 @@ void Boss::Release()
     m_Attack1Tex.Release();
     m_Attack2Tex.Release();
     m_DeathTex.Release();
+    m_NameTex.Release();
 
 }
 
@@ -326,4 +370,19 @@ void Boss::Damage(int _amount)
         // aliveFlg は false にしない 死亡モーション後に処理する
         TriggerDeath();
     }
+}
+
+void Boss::DrawName()
+{
+    if (m_namePhase == NamePhase::None || m_nameAlpha <= 0.0f) return;
+
+    Math::Matrix mat = Math::Matrix::CreateTranslation(
+        m_pos.x,
+        m_pos.y + AppConst::BOSS_NAME_OFFSET_Y,
+        0);
+
+    SHADER.m_spriteShader.SetMatrix(mat);
+    SHADER.m_spriteShader.DrawTex(&m_NameTex,
+        Math::Rectangle{ 0, 0, AppConst::BOSS_NAME_W, AppConst::BOSS_NAME_H },
+        m_nameAlpha);
 }
