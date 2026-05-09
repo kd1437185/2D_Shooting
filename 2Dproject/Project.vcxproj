@@ -162,6 +162,8 @@
     <ClInclude Include="Src\Application\AppConst.h" />
     <ClInclude Include="Src\Application\Background\ScrollBackground.h" />
     <ClInclude Include="Src\Application\Collision\CollisionManager.h" />
+    <ClInclude Include="Src\Application\Effect\EffectManager.h" />
+    <ClInclude Include="Src\Application\Effect\HitEffect.h" />
     <ClInclude Include="Src\Application\Health\HealthManager.h" />
     <ClInclude Include="Src\Application\Object\BaseObject.h" />
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.h" />
     <ClInclude Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.h" />
     <ClInclude Include="Src\Application\Object\Player\Player.h" />
+    <ClInclude Include="Src\Application\Result\ResultManager.h" />
     <ClInclude Include="Src\Application\Scene.h" />
     <ClInclude Include="Src\Application\main.h" />
     <ClInclude Include="Src\Application\Scene\BaseScene\BaseScene.h" />
@@ -203,6 +206,8 @@
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Src\Application\Background\ScrollBackground.cpp" />
     <ClCompile Include="Src\Application\Collision\CollisionManager.cpp" />
+    <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\Effect\HitEffect.cpp" />
     <ClCompile Include="Src\Application\Health\HealthManager.cpp" />
     <ClCompile Include="Src\Application\Object\BaseObject.cpp" />
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp" />
@@ -211,6 +216,7 @@
     <ClCompile Include="Src\Application\Object\Enemy\ShooterEnemy\ShooterEnemy.cpp" />
     <ClCompile Include="Src\Application\Object\Enemy\TankEnemy\TankEnemy.cpp" />
     <ClCompile Include="Src\Application\Object\Player\Player.cpp" />
+    <ClCompile Include="Src\Application\Result\ResultManager.cpp" />
     <ClCompile Include="Src\Application\Scene.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\Scene\BaseScene\BaseScene.cpp" />

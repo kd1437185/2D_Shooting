@@ -86,7 +86,7 @@ void TitleScene::UpdateMenu()
 	m_prevUp = nowUp;
 	m_prevDown = nowDown;
 
-	// Enterキーで決定（Zキーから変更）
+	// Enterキーで決定
 	bool nowEnter = GetAsyncKeyState(VK_RETURN) & 0x8000;
 	if (nowEnter && !m_prevEnter)
 	{

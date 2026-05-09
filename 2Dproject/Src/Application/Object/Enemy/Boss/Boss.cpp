@@ -28,6 +28,7 @@ void Boss::Spawn()
     m_attackTimer = 0;
     m_prevWasIdle = false;
     m_fromLeft = false;
+    m_deathFinished = false;
     m_phase = Phase::Enter;
 }
 
@@ -179,12 +180,22 @@ void Boss::UpdateDeath()
         if (m_animFrame >= AppConst::BOSS_DEATH_ANIM_MAX ||
             m_pos.y < -AppConst::SCREEN_HALF_H - AppConst::BOSS_H)
         {
-            m_pos = { AppConst::BOSS_SPAWN_X_LEFT, AppConst::BOSS_STOP_Y };
-            m_animFrame = 0;
-            m_animTimer = 0;
-            m_fromLeft = true;
-            SetHp(AppConst::BOSS_HP); // 体力をリセット
-            m_phase = Phase::EnterFromLeft;
+            if (m_fromLeft)
+            {
+                // 左から来たボスを倒した → クリア
+                m_deathFinished = true;
+                m_aliveFlg = false;
+            }
+            else
+            {
+                // 右から来たボスを倒した → 左から再登場
+                m_pos = { AppConst::BOSS_SPAWN_X_LEFT, AppConst::BOSS_STOP_Y };
+                m_animFrame = 0;
+                m_animTimer = 0;
+                m_fromLeft = true;
+                SetHp(AppConst::BOSS_HP);
+                m_phase = Phase::EnterFromLeft;
+            }
         }
     }
 }
@@ -312,7 +323,7 @@ void Boss::Damage(int _amount)
     if (m_hp <= 0)
     {
         m_hp = 0;
-        // aliveFlg は false にしない！死亡モーション後に処理する
+        // aliveFlg は false にしない 死亡モーション後に処理する
         TriggerDeath();
     }
 }

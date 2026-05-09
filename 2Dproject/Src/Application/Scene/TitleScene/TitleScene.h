@@ -37,7 +37,7 @@ private:
 	int   m_blinkTimer = 0;
 	bool  m_blinkVisible = true;
 
-	// メニュー用点滅タイマー（Title の m_blinkTimer と共用してもOKですが分けた方が安全）
+	// メニュー用点滅タイマー
 	int  m_menuBlinkTimer = 0;
 	bool m_menuBlinkVisible = true;
 

@@ -11,9 +11,12 @@
 #include "../../AppConst.h"
 #include "../../Wave/WaveManager.h"
 #include "../../Health/HealthManager.h"
+#include "../../Result/ResultManager.h"
+#include "../../Effect/EffectManager.h"
 
 void GameScene::Init()
 {
+
 	// 背景
 	ScrollBackground::Instance().Init();
 
@@ -27,6 +30,9 @@ void GameScene::Init()
 	m_player = std::make_shared<Player>();
 	m_player->Init();
 	m_player->StartEnter(); // 入場開始
+
+	// 敵プールをクリアしてから再生成
+	m_Enemies.clear();
 
 	// MobEnemyをあらかじめ ENEMY_MAX 体プールとして生成
 	for (int i = 0; i < AppConst::ENEMY_MAX; i++)
@@ -69,6 +75,10 @@ void GameScene::Init()
 	m_boss->Init();
 
 	HealthManager::Instance().Init();
+
+	ResultManager::Instance().Init();
+
+	EffectManager::Instance().Init();
 
 }
 
@@ -162,7 +172,26 @@ void GameScene::Update()
 
 	if (m_boss && m_boss->IsAlive()) m_boss->Update();
 
-	
+	// 左から来たボスの死亡アニメ完了でリザルト表示
+	if (m_boss && m_boss->IsDeathFinished() && m_boss->IsFromLeft())
+	{
+		if (m_player)
+		{
+			for (auto& b : m_player->GetBullets())
+			{
+				if (b) b->SetAlive(false);
+			}
+		}
+		ResultManager::Instance().Show(ScoreManager::Instance().GetScore());
+		m_boss->ResetDeathFinished();
+	}
+
+	// リザルト表示中はゲーム更新を止める（プレイヤー操作・スコア加算も止まる）
+	if (ResultManager::Instance().IsActive())
+	{
+		ResultManager::Instance().Update();
+		return;
+	}
 
 	// プレイヤー
 	if (m_player) m_player->Update();
@@ -186,6 +215,8 @@ void GameScene::Update()
 		auto& bullets = m_player->GetBullets();
 		CollisionManager::CheckBulletsVsBoss(bullets, m_boss);
 	}
+
+	EffectManager::Instance().Update();
 
 	// 倒されたMobEnemyのY座標を解放
 	for (int i = 0; i < (int)m_Enemies.size(); i++)
@@ -235,6 +266,52 @@ void GameScene::Update()
 		m_player->UpgradeBullet();
 	}
 	prevU = nowU;
+
+	// Nキーで次のウェーブに強制進行（デバッグ用）
+	static bool prevN = false;
+	bool nowN = GetAsyncKeyState('N') & 0x8000;
+	if (nowN && !prevN)
+	{
+		// 現在の全敵を消す
+		for (auto& e : m_Enemies)
+		{
+			if (e && e->IsAlive()) e->SetAlive(false);
+		}
+		if (m_boss && m_boss->IsAlive())
+		{
+			m_boss->SetAlive(false);
+		}
+
+		// Y座標管理をリセット
+		m_usedY.fill(false);
+		m_usedY2.fill(false);
+
+		// スポーンカウンターを最大値にして次のウェーブへ
+		int killCount = 0;
+		switch (WaveManager::Instance().GetCurrentWave())
+		{
+		case WaveType::MobEnemy:
+			killCount = AppConst::ENEMY_MAX - WaveManager::Instance().GetDefeatedCount();
+			break;
+		case WaveType::Enemy2:
+			killCount = AppConst::SHOOTER_MAX - WaveManager::Instance().GetDefeatedCount();
+			break;
+		case WaveType::Enemy3:
+			killCount = AppConst::TANK_MAX - WaveManager::Instance().GetDefeatedCount();
+			break;
+		case WaveType::Boss:
+			killCount = 1 - WaveManager::Instance().GetDefeatedCount();
+			break;
+		default:
+			break;
+		}
+
+		for (int i = 0; i < killCount; i++)
+		{
+			WaveManager::Instance().OnEnemyDefeated();
+		}
+	}
+	prevN = nowN;
 
 }
 
@@ -342,11 +419,16 @@ void GameScene::Draw()
 		m_player->Draw();
 	}
 
+	EffectManager::Instance().Draw();
+
 	// スコア
 	ScoreManager::Instance().Draw();
 
 	// 体力バー
 	HealthManager::Instance().Draw();
+
+	// リザルトは最前面に描画
+	ResultManager::Instance().Draw();
 
 }
 
@@ -379,5 +461,9 @@ void GameScene::Release()
 		m_boss->Release();
 		m_boss = nullptr;
 	}
+
+	ResultManager::Instance().Release();
+
+	EffectManager::Instance().Release();
 
 }

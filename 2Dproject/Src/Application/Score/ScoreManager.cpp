@@ -55,3 +55,35 @@ void ScoreManager::Draw()
         SHADER.m_spriteShader.DrawTex(&m_numTex, srcRect, 1.0f);
     }
 }
+
+void ScoreManager::DrawResult(float _posY, float _scale)
+{
+    for (int i = 0; i < AppConst::SCORE_DIGITS; i++)
+    {
+        int place = 1;
+        for (int j = 0; j < AppConst::SCORE_DIGITS - 1 - i; j++)
+            place *= 10;
+        int digit = (m_score / place) % 10;
+
+        Math::Rectangle srcRect =
+        {
+            digit * AppConst::NUMBER_W,
+            0,
+            AppConst::NUMBER_W,
+            AppConst::NUMBER_H
+        };
+
+        // スケールと位置を反映
+        float scaledW = AppConst::NUMBER_W * _scale;
+        float totalW = scaledW * AppConst::SCORE_DIGITS;
+
+        Math::Matrix mat = Math::Matrix::CreateScale(_scale, _scale, 1.0f)
+            * Math::Matrix::CreateTranslation(
+                -totalW / 2.0f + scaledW * i + scaledW / 2.0f,
+                _posY,
+                0);
+
+        SHADER.m_spriteShader.SetMatrix(mat);
+        SHADER.m_spriteShader.DrawTex(&m_numTex, srcRect, 1.0f);
+    }
+}

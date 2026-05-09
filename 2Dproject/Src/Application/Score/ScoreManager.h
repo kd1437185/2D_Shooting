@@ -10,6 +10,7 @@ public:
     void AddScore(int _score);
     int  GetScore() const { return m_score; }
     void Reset() { m_score = 0; }
+    void DrawResult(float _posY, float _scale); // リザルト用描画
 
     // シングルトン
 private:

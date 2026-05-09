@@ -7,6 +7,7 @@
 #include "../Object/Enemy/ShooterEnemy/ShooterEnemy.h"
 #include "../Object/Enemy/TankEnemy/TankEnemy.h"
 #include "../Object/Enemy/Boss/Boss.h"
+#include "../Effect/EffectManager.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -42,6 +43,7 @@ void CollisionManager::CheckBulletsVsEnemies(
             {
                 bullet->SetAlive(false);
                 enemy->Damage(bullet->GetDamage()); // Bulletのダメージを使用
+                EffectManager::Instance().PlayHitEffect(bullet->GetPos());
 
                 if (enemy->IsDead())
                 {
@@ -59,7 +61,7 @@ void CollisionManager::CheckBulletsVsEnemies(
     }
 }
 
-// ボス専用の当たり判定を追加
+// ボス専用の当たり判定
 void CollisionManager::CheckBulletsVsBoss(
     std::vector<std::shared_ptr<Bullet>>& _bullets,
     std::shared_ptr<Boss>& _boss)
@@ -76,12 +78,13 @@ void CollisionManager::CheckBulletsVsBoss(
             _boss->GetPos(), AppConst::BOSS_RADIUS))
         {
             bullet->SetAlive(false);
-            _boss->Damage(bullet->GetDamage()); // Bulletのダメージを使用
+            _boss->Damage(bullet->GetDamage());
+            EffectManager::Instance().PlayHitEffect(bullet->GetPos());
 
             if (_boss->IsDead())
             {
                 ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
-                _boss->TriggerDeath();
+                // TriggerDeath は Boss::Damage() 内で呼ばれるので不要
             }
         }
     }

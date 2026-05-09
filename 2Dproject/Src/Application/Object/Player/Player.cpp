@@ -55,9 +55,21 @@ void Player::Update()
     }
 
     // 以降は通常操作
+   // 移動ベクトルを計算
     Math::Vector2 move = { 0.0f, 0.0f };
-    if (GetAsyncKeyState(VK_LEFT) & 0x8000) { move.x -= 1.0f; m_direction = -1.0f; }
-    if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { move.x += 1.0f; m_direction = 1.0f; }
+
+    bool isShooting = GetAsyncKeyState('Z') & 0x8000;
+
+    if (GetAsyncKeyState(VK_LEFT) & 0x8000)
+    {
+        move.x -= 1.0f;
+        if (!isShooting) m_direction = -1.0f; // 撃っていないときだけ向き変更
+    }
+    if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+    {
+        move.x += 1.0f;
+        if (!isShooting) m_direction = 1.0f;  // 撃っていないときだけ向き変更
+    }
     if (GetAsyncKeyState(VK_UP) & 0x8000) move.y += 1.0f;
     if (GetAsyncKeyState(VK_DOWN) & 0x8000) move.y -= 1.0f;
 

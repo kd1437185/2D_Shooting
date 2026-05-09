@@ -41,6 +41,12 @@ public:
 
     void Damage(int _amount) override;
 
+    bool IsFromLeft() const { return m_fromLeft; }
+
+    bool IsDeathFinished() const { return m_deathFinished; }
+
+    void ResetDeathFinished() { m_deathFinished = false; }
+
 private:
     void UpdateEnter();
     void UpdateIdleBefore();
@@ -65,6 +71,8 @@ private:
     int   m_attackTimer = 0; // 攻撃間隔タイマー
     bool  m_prevWasIdle = false; // 前回が待機だったか
     bool  m_fromLeft = false; // 左から登場中か
+
+    bool m_deathFinished = false;
 
     Phase m_phase = Phase::Enter;
 };

@@ -3,8 +3,8 @@
 namespace AppConst
 {
     // 画面
-    static const int   SCREEN_W = 1280;
-    static const int   SCREEN_H = 720;
+    static const int   SCREEN_W      = 1280;
+    static const int   SCREEN_H      = 720;
     static const float SCREEN_HALF_W = 640.0f;
     static const float SCREEN_HALF_H = 360.0f;
 
@@ -14,67 +14,67 @@ namespace AppConst
     static const float LOGO_Y = 100.0f; // 中央上部からの距離
 
     // プレイヤー
-    static const int   PLAYER_W = 32;
-    static const int   PLAYER_H = 32;
-    static const float PLAYER_SCALE = 2.0f;
-    static const float PLAYER_SCALED_W = 64.0f;
-    static const float PLAYER_SCALED_H = 64.0f;
-    static const int   PLAYER_SIZE = 64;   // 当たり判定用（既存との互換）
-    static const float PLAYER_SPEED = 7.0f;
-    static const int   PLAYER_ANIM_MAX = 8;
+    static const int   PLAYER_W          = 32;
+    static const int   PLAYER_H          = 32;
+    static const float PLAYER_SCALE      = 2.0f;
+    static const float PLAYER_SCALED_W   = 64.0f;
+    static const float PLAYER_SCALED_H   = 64.0f;
+    static const int   PLAYER_SIZE       = 64;   // 当たり判定用（既存との互換）
+    static const float PLAYER_SPEED      = 9.0f;
+    static const int   PLAYER_ANIM_MAX   = 8;
     static const int   PLAYER_ANIM_SPEED = 6;
-    static const int SHOT_INTERVAL = 3; // 連射間隔（フレーム数）小さいほど速い
+    static const int   SHOT_INTERVAL     = 8; // 連射間隔（フレーム数）小さいほど速い
 
     // プレイヤー入場
-    static const float PLAYER_ENTER_SPEED = 4.0f;
+    static const float PLAYER_ENTER_SPEED   = 4.0f;
     static const float PLAYER_ENTER_START_X = -(SCREEN_HALF_W + 64.0f); // 画面左外
-    static const float PLAYER_ENTER_STOP_X = -300.0f; // 停止位置
+    static const float PLAYER_ENTER_STOP_X  = -300.0f; // 停止位置
 
     // MobEnemy
-    static const int   ENEMY_W = 22;    // 1コマの幅
-    static const int   ENEMY_H = 24;    // 1コマの高さ
-    static const float ENEMY_SCALE = 2.0f;  // 拡大倍率
-    static const float ENEMY_SCALED_W = ENEMY_W * ENEMY_SCALE;  // 44
-    static const float ENEMY_SCALED_H = ENEMY_H * ENEMY_SCALE;  // 48
-    static const int   ENEMY_ANIM_MAX = 10;    // アニメーションコマ数
-    static const int   ENEMY_ANIM_SPEED = 6;     // 何フレームで1コマ進むか
-    static const float ENEMY_SPEED = 5.0f;
-    static const int   ENEMY_MAX = 5;      // 最大同時出現数
+    static const int   ENEMY_W              = 22;    // 1コマの幅
+    static const int   ENEMY_H              = 24;    // 1コマの高さ
+    static const float ENEMY_SCALE          = 2.0f;  // 拡大倍率
+    static const float ENEMY_SCALED_W       = ENEMY_W * ENEMY_SCALE;  // 44
+    static const float ENEMY_SCALED_H       = ENEMY_H * ENEMY_SCALE;  // 48
+    static const int   ENEMY_ANIM_MAX       = 10;    // アニメーションコマ数
+    static const int   ENEMY_ANIM_SPEED     = 6;     // 何フレームで1コマ進むか
+    static const float ENEMY_SPEED          = 5.0f;
+    static const int   ENEMY_MAX            = 5;      // 最大同時出現数
     static const int   ENEMY_SPAWN_INTERVAL = 60; // 1秒（60fps × 1）
 
     // 敵のY座標候補（5か所）
     static const float ENEMY_Y_LIST[5] = { 200.0f, 100.0f, 0.0f, -100.0f, -200.0f };
 
     // ShooterEnemy
-    static const int   SHOOTER_W = 32;
-    static const int   SHOOTER_H = 32;
-    static const float SHOOTER_SCALE = 2.0f;
-    static const float SHOOTER_SCALED_W = SHOOTER_W * SHOOTER_SCALE;  // 64
-    static const float SHOOTER_SCALED_H = SHOOTER_H * SHOOTER_SCALE;  // 64
-    static const int   SHOOTER_ANIM_MAX = 16;
-    static const int   SHOOTER_ANIM_SPEED = 4;
-    static const float SHOOTER_SPEED = 4.0f;
-    static const float SHOOTER_STOP_X = 500.0f;
+    static const int   SHOOTER_W           = 32;
+    static const int   SHOOTER_H           = 32;
+    static const float SHOOTER_SCALE       = 2.0f;
+    static const float SHOOTER_SCALED_W    = SHOOTER_W * SHOOTER_SCALE;  // 64
+    static const float SHOOTER_SCALED_H    = SHOOTER_H * SHOOTER_SCALE;  // 64
+    static const int   SHOOTER_ANIM_MAX    = 16;
+    static const int   SHOOTER_ANIM_SPEED  = 4;
+    static const float SHOOTER_SPEED       = 4.0f;
+    static const float SHOOTER_STOP_X      = 500.0f;
     static const float SHOOTER_FLOAT_SPEED = 0.05f;
     static const float SHOOTER_FLOAT_RANGE = 80.0f;
-    static const int   SHOOTER_MAX = 5;
-    static const float SHOOTER_RADIUS = SHOOTER_SCALED_W / 2.0f;  // 32.0f
-    static const int   SCORE_PER_SHOOTER = 300;
+    static const int   SHOOTER_MAX         = 5;
+    static const float SHOOTER_RADIUS      = SHOOTER_SCALED_W / 2.0f;  // 32.0f
+    static const int   SCORE_PER_SHOOTER   = 300;
 
     // TankEnemy
-    static const int   TANK_W = 32;
-    static const int   TANK_H = 96;
-    static const float TANK_SCALE = 2.0f;
-    static const float TANK_SCALED_W = 64.0f;   // 32 * 2
-    static const float TANK_SCALED_H = 192.0f;  // 96 * 2
-    static const int   TANK_ANIM_MAX = 16;
-    static const int   TANK_ANIM_SPEED = 4;
-    static const float TANK_DROP_SPEED = 12.0f;   // 落下速度
-    static const float TANK_RISE_SPEED = 3.0f;    // 上昇速度
-    static const float TANK_RISE_AMOUNT = 60.0f;   // 上昇量
-    static const int   TANK_MAX = 3;
-    static const float TANK_RADIUS = 32.0f;
-    static const int   SCORE_PER_TANK = 500;
+    static const int   TANK_W              = 32;
+    static const int   TANK_H              = 96;
+    static const float TANK_SCALE          = 2.0f;
+    static const float TANK_SCALED_W       = 64.0f;   // 32 * 2
+    static const float TANK_SCALED_H       = 192.0f;  // 96 * 2
+    static const int   TANK_ANIM_MAX       = 16;
+    static const int   TANK_ANIM_SPEED     = 4;
+    static const float TANK_DROP_SPEED     = 12.0f;   // 落下速度
+    static const float TANK_RISE_SPEED     = 3.0f;    // 上昇速度
+    static const float TANK_RISE_AMOUNT    = 60.0f;   // 上昇量
+    static const int   TANK_MAX            = 3;
+    static const float TANK_RADIUS         = 32.0f;
+    static const int   SCORE_PER_TANK      = 500;
     static const int   TANK_SPAWN_INTERVAL = 30;     // 0.5秒
 
     // TankEnemy の固定X座標
@@ -85,16 +85,14 @@ namespace AppConst
     static const float TANK_STOP_Y_LIST[3] = { 150.0f, -50.0f, -250.0f };
 
     // 弾
-    static const int   BULLET_W = 100;
-    static const int   BULLET_H = 100;
-    static const float BULLET_SCALE = 0.8f;  // 1/5に縮小
-    static const float BULLET_SCALED_W = 20.0f; // 100 * 0.2
-    static const int   BULLET_SIZE = 20;    // 当たり判定用
-    static const float BULLET_RADIUS = 10.0f;   // BULLET_SIZE の半分
-    static const int   BULLET_ANIM_MAX = 60;
-    static const int   BULLET_ANIM_COLS = 8;     // 横のコマ数
-    static const int   BULLET_ANIM_SPEED = 1;     // アニメ速度
-    static const float BULLET_SPEED = 12.0f;
+    static const int   BULLET_W = 243;
+    static const int   BULLET_H = 140;
+    static const float BULLET_SCALE = 0.5f;  // 倍率（調整可）
+    static const float BULLET_SCALED_W = 121.5f; // 243 * 0.5
+    static const int   BULLET_SIZE = 20;
+    static const float BULLET_RADIUS = 10.0f;
+    static const float BULLET_ALPHA = 0.6f; // アルファ値
+    static const float BULLET_SPEED = 20.0f;
     static const int   BULLET_MAX = 100; // 同時に出せる最大数
 
     // 弾のダメージ
@@ -163,8 +161,8 @@ namespace AppConst
     static const float BOSS_STOP_Y = 0.0f;
     static const float BOSS_SPAWN_X = SCREEN_HALF_W + BOSS_W; // 640 + 359 = 999.0f
     static const int   SCORE_PER_BOSS = 10000;
-    static const int BOSS_IDLE_AFTER_ANIM_MAX = 10;  // 戦闘待機
-    static const int BOSS_H_AFTER = 265; // 戦闘形態の高さ
+    static const int   BOSS_IDLE_AFTER_ANIM_MAX = 10;  // 戦闘待機
+    static const int   BOSS_H_AFTER = 265; // 戦闘形態の高さ
     static const float BOSS_RADIUS = 150.0f; // 当たり判定半径
 
     // Boss 攻撃
@@ -185,5 +183,31 @@ namespace AppConst
     static const int SHOOTER_HP = 200;
     static const int TANK_HP = 500;
     static const int BOSS_HP = 1000;
+
+    // リザルト
+    static const int   RESULT_BG_W = 676;
+    static const int   RESULT_BG_H = 400;
+    static const float RESULT_BG_ALPHA = 0.75f;
+    static const float RESULT_BG_Y = -30.0f;    // 背景のY座標（調整可）
+    static const int   RESULT_SELECT_W = 256;
+    static const int   RESULT_SELECT_H = 64;
+    static const float RESULT_SELECT_Y1 = -80.0f;  // BACK TITLE のY座標（調整可）
+
+    // スコア演出
+    static const float RESULT_SCORE_START_Y = SCREEN_HALF_H - 30.0f; // スコアの初期Y（上部）
+    static const float RESULT_SCORE_END_Y = 40.0f;  // 着地Y座標（調整可）
+    static const float RESULT_SCORE_START_SCALE = 1.0f;
+    static const float RESULT_SCORE_END_SCALE = 2.0f; // 拡大後のスケール
+    static const int   RESULT_ANIM_DURATION = 60;    // 1秒（60fps）
+    static const int   RESULT_SELECT_DELAY = 90;    // 選択肢表示までの遅延
+
+    // ヒットエフェクト
+    static const int   HIT_W = 355;
+    static const int   HIT_H = 365;
+    static const float HIT_SCALE = 0.4f;  // 拡大倍率（調整可）
+    static const float HIT_ALPHA = 0.1f;  // アルファ値（調整可）
+    static const int   HIT_ANIM_MAX = 60;    // 総コマ数
+    static const int   HIT_ANIM_COLS = 10;    // 横のコマ数
+    static const int   HIT_ANIM_SPEED = 1;     // アニメ速度（調整可）
 
 }

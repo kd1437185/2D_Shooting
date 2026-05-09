@@ -94,6 +94,12 @@
     <Filter Include="Src\Application\Object\Enemy\Boss">
       <UniqueIdentifier>{d88eb69d-89e6-4af7-87dd-bb527af8d8b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Result">
+      <UniqueIdentifier>{f2dac5fb-4f7a-4ca1-a122-e727c02bd226}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Effect">
+      <UniqueIdentifier>{5fcadbc8-bcc6-4356-9ebb-3c2c5ace78b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -240,6 +246,15 @@
     <ClInclude Include="Src\Application\Object\Enemy\Boss\Boss.h">
       <Filter>Src\Application\Object\Enemy\Boss</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Result\ResultManager.h">
+      <Filter>Src\Application\Result</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Effect\HitEffect.h">
+      <Filter>Src\Application\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Effect\EffectManager.h">
+      <Filter>Src\Application\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -352,6 +367,15 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Object\Enemy\Boss\Boss.cpp">
       <Filter>Src\Application\Object\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Result\ResultManager.cpp">
+      <Filter>Src\Application\Result</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Effect\HitEffect.cpp">
+      <Filter>Src\Application\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Effect\EffectManager.cpp">
+      <Filter>Src\Application\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
