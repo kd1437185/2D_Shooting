@@ -2,9 +2,13 @@
 
 #include "../SceneManager.h"
 #include "../../AppConst.h"
+#include"../../Sound/SoundManager.h"
 
 void TitleScene::Init()
 {
+	SoundManager::Instance().Init(); // Å‰‚Ì1‰ñ‚¾‚¯
+	SoundManager::Instance().PlayTitleBGM();
+
 	// ”wŒi
 	ScrollBackground::Instance().Init();
 

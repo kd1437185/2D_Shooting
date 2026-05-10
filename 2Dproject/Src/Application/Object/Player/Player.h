@@ -40,7 +40,6 @@ public:
 	bool IsShieldActive() const { return m_shield.IsActive(); }
 	void ActivateShield() { m_shield.Activate(); }
 
-	void  UseBomb();
 	int   GetBombStock() const { return m_bombStock; }
 	bool  IsBombing()    const { return m_shield.IsBombing(); }
 	float GetShieldRadius() const { return m_shield.GetCurrentRadius(); }

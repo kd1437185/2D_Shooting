@@ -208,6 +208,8 @@ void Application::Execute()
 		// ゲーム更新処理
 		SCENE.Update();
 
+		ShowCursor(false);
+
 		// ゲーム描画処理
 		SHADER.m_spriteShader.Begin();
 		SCENE.Draw2D();

@@ -2,6 +2,7 @@
 #include "../Bullet/Bullet.h"
 #include "../Bullet/HomingBullet.h"
 #include "Application/AppConst.h"
+#include "../../Sound/SoundManager.h"
 
 void Player::Init()
 {
@@ -123,6 +124,7 @@ void Player::Update()
     {
         m_bombStock--;
         m_shield.ActivateBomb();
+        SoundManager::Instance().PlayBombSE(); // ƒ{ƒ€‰¹
     }
     m_prevX = nowX;
 
@@ -194,6 +196,8 @@ void Player::Release()
 
 void Player::Shot()
 {
+    SoundManager::Instance().PlayShotSE();
+
     switch (m_bulletLevel)
     {
     case 1: ShotLv1(); break;

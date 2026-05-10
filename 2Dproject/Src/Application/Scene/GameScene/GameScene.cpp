@@ -13,9 +13,12 @@
 #include "../../Health/HealthManager.h"
 #include "../../Result/ResultManager.h"
 #include "../../Effect/EffectManager.h"
+#include "../../Sound/SoundManager.h"
 
 void GameScene::Init()
 {
+
+	SoundManager::Instance().PlayGameBGM();
 
 	// 背景
 	ScrollBackground::Instance().Init();
@@ -84,6 +87,8 @@ void GameScene::Init()
 	EffectManager::Instance().Init();
 
 	m_bombUI.Init();
+
+	m_bulletLevelUI.Init();
 
 	// プレイヤーにターゲットリストを渡す
 	m_player->SetTargetLists(&m_Enemies, reinterpret_cast<std::shared_ptr<BaseObject>*>(&m_boss));
@@ -452,6 +457,8 @@ void GameScene::Draw()
 	// スコア
 	ScoreManager::Instance().Draw();
 
+	m_bulletLevelUI.Draw(m_player ? m_player->GetBulletLevel() : 1);
+
 	// 体力バー
 	HealthManager::Instance().Draw();
 
@@ -497,5 +504,7 @@ void GameScene::Release()
 	EffectManager::Instance().Release();
 
 	m_bombUI.Release();
+
+	m_bulletLevelUI.Release();
 
 }

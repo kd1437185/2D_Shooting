@@ -103,6 +103,9 @@
     <Filter Include="Src\Application\UI">
       <UniqueIdentifier>{15e095c3-3914-4653-a3ee-63e16251aa77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Sound">
+      <UniqueIdentifier>{758a362a-9874-4c89-802e-893ba498cdb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -276,6 +279,12 @@
     <ClInclude Include="Src\Application\UI\BombStockUI.h">
       <Filter>Src\Application\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\UI\BulletLevelUI.h">
+      <Filter>Src\Application\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Sound\SoundManager.h">
+      <Filter>Src\Application\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -415,6 +424,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\UI\BombStockUI.cpp">
       <Filter>Src\Application\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\UI\BulletLevelUI.cpp">
+      <Filter>Src\Application\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Sound\SoundManager.cpp">
+      <Filter>Src\Application\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 #include "Application/AppConst.h"
 #include "../../Background/ScrollBackground.h"
 #include "../../UI/BombStockUI.h"
+#include "../../UI/BulletLevelUI.h"
 
 class BaseObject;
 class Player;
@@ -51,5 +52,7 @@ private:
 	int m_mobMax = AppConst::MOB_MAX_WAVE1; // åªç›ÇÃMobEnemyç≈ëÂêî
 
 	BombStockUI m_bombUI;
+
+	BulletLevelUI m_bulletLevelUI;
 
 };

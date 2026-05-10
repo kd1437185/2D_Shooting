@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "../../../AppConst.h"
+#include "../../../Sound/SoundManager.h"
 
 void Boss::Init()
 {
@@ -162,6 +163,12 @@ void Boss::UpdateEnter()
         m_animFrame = 0;
         m_animTimer = 0;
         m_phase = Phase::IdleBefore;
+
+        // ‰E‚©‚ç—ˆ‚½ƒ{ƒX‚Ì‚İBGMØ‚è‘Ö‚¦
+        if (!m_fromLeft)
+        {
+            SoundManager::Instance().PlayBossBGM();
+        }
     }
 }
 

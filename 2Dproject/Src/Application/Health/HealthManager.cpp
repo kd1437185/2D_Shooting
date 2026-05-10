@@ -1,5 +1,6 @@
 #include "HealthManager.h"
 #include "../AppConst.h"
+#include "../Sound/SoundManager.h"
 
 void HealthManager::Init()
 {
@@ -18,6 +19,7 @@ void HealthManager::Damage()
     {
         m_hp--;
         m_wasDamaged = true;
+        SoundManager::Instance().PlayDamageSE();    // ”í’eŽž‚Ì‰¹
     }
 }
 
