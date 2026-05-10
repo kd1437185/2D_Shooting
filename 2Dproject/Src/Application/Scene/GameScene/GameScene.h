@@ -3,6 +3,7 @@
 #include "../BaseScene/BaseScene.h"
 #include "Application/AppConst.h"
 #include "../../Background/ScrollBackground.h"
+#include "../../UI/BombStockUI.h"
 
 class BaseObject;
 class Player;
@@ -48,5 +49,7 @@ private:
 	Math::Vector2 m_playerPos = {}; // プレイヤー位置キャッシュ
 
 	int m_mobMax = AppConst::MOB_MAX_WAVE1; // 現在のMobEnemy最大数
+
+	BombStockUI m_bombUI;
 
 };

@@ -164,6 +164,7 @@
     <ClInclude Include="Src\Application\Collision\CollisionManager.h" />
     <ClInclude Include="Src\Application\Effect\EffectManager.h" />
     <ClInclude Include="Src\Application\Effect\HitEffect.h" />
+    <ClInclude Include="Src\Application\Effect\ShieldEffect.h" />
     <ClInclude Include="Src\Application\Health\HealthManager.h" />
     <ClInclude Include="Src\Application\Object\BaseObject.h" />
     <ClInclude Include="Src\Application\Object\Bullet\Bullet.h" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Src\Application\Scene\SceneManager.h" />
     <ClInclude Include="Src\Application\Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Src\Application\Score\ScoreManager.h" />
+    <ClInclude Include="Src\Application\UI\BombStockUI.h" />
     <ClInclude Include="Src\Application\Wave\WaveManager.h" />
     <ClInclude Include="Src\System\Audio\KdAudio.h" />
     <ClInclude Include="src\System\Direct3D\KdDirect3D.h" />
@@ -212,6 +214,7 @@
     <ClCompile Include="Src\Application\Collision\CollisionManager.cpp" />
     <ClCompile Include="Src\Application\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Application\Effect\HitEffect.cpp" />
+    <ClCompile Include="Src\Application\Effect\ShieldEffect.cpp" />
     <ClCompile Include="Src\Application\Health\HealthManager.cpp" />
     <ClCompile Include="Src\Application\Object\BaseObject.cpp" />
     <ClCompile Include="Src\Application\Object\Bullet\Bullet.cpp" />
@@ -232,6 +235,7 @@
     <ClCompile Include="Src\Application\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Application\Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="Src\Application\Score\ScoreManager.cpp" />
+    <ClCompile Include="Src\Application\UI\BombStockUI.cpp" />
     <ClCompile Include="Src\Application\Wave\WaveManager.cpp" />
     <ClCompile Include="Src\System\Audio\KdAudio.cpp" />
     <ClCompile Include="src\System\Direct3D\KdDirect3D.cpp" />

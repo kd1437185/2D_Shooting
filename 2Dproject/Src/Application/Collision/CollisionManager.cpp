@@ -54,14 +54,18 @@ void CollisionManager::CheckBulletsVsEnemies(
                 // フェードアウト開始 = 死亡
                 if (enemy->IsFading())
                 {
-                    if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
+                    bool isMob = (std::dynamic_pointer_cast<MobEnemy>(enemy) != nullptr);
+                    bool isShooter = (std::dynamic_pointer_cast<ShooterEnemy>(enemy) != nullptr);
+                    bool isTank = (std::dynamic_pointer_cast<TankEnemy>(enemy) != nullptr);
+
+                    if (isShooter)
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                    else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
+                    else if (isTank)
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
                     else
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
 
-                    WaveManager::Instance().OnEnemyDefeated();
+                    WaveManager::Instance().OnEnemyDefeated(isMob, isShooter, isTank, false);
                 }
             }
         }
@@ -90,6 +94,7 @@ void CollisionManager::CheckBulletsVsBoss(
             if (_boss->IsDead())
             {
                 ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
+                WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
         }
     }
@@ -124,14 +129,18 @@ void CollisionManager::CheckHomingVsEnemies(
 
                 if (enemy->IsFading())
                 {
-                    if (std::dynamic_pointer_cast<ShooterEnemy>(enemy))
+                    bool isMob = (std::dynamic_pointer_cast<MobEnemy>(enemy) != nullptr);
+                    bool isShooter = (std::dynamic_pointer_cast<ShooterEnemy>(enemy) != nullptr);
+                    bool isTank = (std::dynamic_pointer_cast<TankEnemy>(enemy) != nullptr);
+
+                    if (isShooter)
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                    else if (std::dynamic_pointer_cast<TankEnemy>(enemy))
+                    else if (isTank)
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
                     else
                         ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
 
-                    WaveManager::Instance().OnEnemyDefeated();
+                    WaveManager::Instance().OnEnemyDefeated(isMob, isShooter, isTank, false);
                 }
             }
         }
@@ -171,9 +180,14 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
 {
     if (!_player) return;
 
+    bool  shieldActive = _player->IsShieldActive();
+    bool  isBombing = _player->IsBombing();
+    float checkRadius = isBombing ? _player->GetShieldRadius() :
+        shieldActive ? AppConst::SHIELD_RADIUS :
+        AppConst::PLAYER_RADIUS;
+
     for (auto& e : _enemies)
     {
-        // MobEnemy
         auto mob = std::dynamic_pointer_cast<MobEnemy>(e);
         if (mob)
         {
@@ -182,16 +196,15 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
                 if (!b || !b->IsAlive()) continue;
                 if (CircleCollision(
                     b->GetPos(), AppConst::ENEMY_BULLET_RADIUS,
-                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                    _player->GetPos(), checkRadius))
                 {
                     b->SetAlive(false);
-                    HealthManager::Instance().Damage();
+                    if (!shieldActive && !isBombing) HealthManager::Instance().Damage();
                 }
             }
             continue;
         }
 
-        // ShooterEnemy
         auto shooter = std::dynamic_pointer_cast<ShooterEnemy>(e);
         if (shooter)
         {
@@ -200,16 +213,15 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
                 if (!b || !b->IsAlive()) continue;
                 if (CircleCollision(
                     b->GetPos(), AppConst::ENEMY_BULLET_RADIUS,
-                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                    _player->GetPos(), checkRadius))
                 {
                     b->SetAlive(false);
-                    HealthManager::Instance().Damage();
+                    if (!shieldActive && !isBombing) HealthManager::Instance().Damage();
                 }
             }
             continue;
         }
 
-        // TankEnemy
         auto tank = std::dynamic_pointer_cast<TankEnemy>(e);
         if (tank)
         {
@@ -218,10 +230,10 @@ void CollisionManager::CheckEnemyBulletsVsPlayer(
                 if (!b || !b->IsAlive()) continue;
                 if (CircleCollision(
                     b->GetPos(), AppConst::TANK_BULLET_RADIUS,
-                    _player->GetPos(), AppConst::PLAYER_RADIUS))
+                    _player->GetPos(), checkRadius))
                 {
                     b->SetAlive(false);
-                    HealthManager::Instance().Damage();
+                    if (!shieldActive && !isBombing) HealthManager::Instance().Damage();
                 }
             }
         }
@@ -234,15 +246,21 @@ void CollisionManager::CheckDanmakuVsPlayer(
 {
     if (!_player) return;
 
+    bool  shieldActive = _player->IsShieldActive();
+    bool  isBombing = _player->IsBombing();
+    float checkRadius = isBombing ? _player->GetShieldRadius() :
+        shieldActive ? AppConst::SHIELD_RADIUS :
+        AppConst::PLAYER_RADIUS;
+
     for (auto& b : _bullets)
     {
         if (!b || !b->IsAlive()) continue;
         if (CircleCollision(
             b->GetPos(), AppConst::DANMAKU_BULLET_RADIUS,
-            _player->GetPos(), AppConst::PLAYER_RADIUS))
+            _player->GetPos(), checkRadius))
         {
             b->SetAlive(false);
-            HealthManager::Instance().Damage();
+            if (!shieldActive && !isBombing) HealthManager::Instance().Damage();
         }
     }
 }

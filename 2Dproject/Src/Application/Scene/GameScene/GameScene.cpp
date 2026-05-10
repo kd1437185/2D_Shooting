@@ -83,6 +83,8 @@ void GameScene::Init()
 
 	EffectManager::Instance().Init();
 
+	m_bombUI.Init();
+
 	// プレイヤーにターゲットリストを渡す
 	m_player->SetTargetLists(&m_Enemies, reinterpret_cast<std::shared_ptr<BaseObject>*>(&m_boss));
 }
@@ -111,70 +113,71 @@ void GameScene::Update()
 	{
 		WaveManager::Instance().ResetWaveClear();
 
-		m_spawnedCount = 0;
-		m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
-		m_shooterSpawnedCount = 0;
-		m_shooterSpawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
-		m_tankSpawnedCount = 0;
-		m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
+		const WaveData& wave = WaveManager::Instance().GetCurrentWave();
+
+		// スポーンカウンターをリセット
+		if (wave.spawnMob)
+		{
+			m_spawnedCount = 0;
+			m_spawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+			m_mobMax = wave.mobCount;
+		}
+		if (wave.spawnShooter)
+		{
+			m_shooterSpawnedCount = 0;
+			m_shooterSpawnTimer = AppConst::ENEMY_SPAWN_INTERVAL;
+		}
+		if (wave.spawnTank)
+		{
+			m_tankSpawnedCount = 0;
+			m_tankSpawnTimer = AppConst::TANK_SPAWN_INTERVAL;
+		}
+
 		m_usedY.fill(false);
 		m_usedY2.fill(false);
+	}
 
-		// ウェーブに応じてMobEnemyの数を変更
-		int waveIndex = WaveManager::Instance().GetWaveIndex();
-		if (waveIndex == 3) // 4周目のMobEnemy
+	const WaveData& wave = WaveManager::Instance().GetCurrentWave();
+
+	// MobEnemy スポーン
+	if (wave.spawnMob && m_spawnedCount < wave.mobCount)
+	{
+		m_spawnTimer++;
+		if (m_spawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
 		{
-			m_mobMax = AppConst::MOB_MAX_WAVE4;
+			m_spawnTimer = 0;
+			SpawnEnemy();
 		}
 	}
 
-	// MobEnemy ウェーブのときだけスポーン
-	if (WaveManager::Instance().GetCurrentWave() == WaveType::MobEnemy)
+	// ShooterEnemy スポーン
+	if (wave.spawnShooter && m_shooterSpawnedCount < wave.shooterCount)
 	{
-		if (m_spawnedCount < m_mobMax)
+		m_shooterSpawnTimer++;
+		if (m_shooterSpawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
 		{
-			m_spawnTimer++;
-			if (m_spawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
-			{
-				m_spawnTimer = 0;
-				SpawnEnemy();
-			}
+			m_shooterSpawnTimer = 0;
+			SpawnShooterEnemy();
 		}
 	}
 
-	// ShooterEnemy ウェーブのときだけスポーン
-	if (WaveManager::Instance().GetCurrentWave() == WaveType::Enemy2)
+	// TankEnemy スポーン
+	if (wave.spawnTank && m_tankSpawnedCount < wave.tankCount)
 	{
-		if (m_shooterSpawnedCount < AppConst::SHOOTER_MAX)
+		m_tankSpawnTimer++;
+		if (m_tankSpawnTimer >= AppConst::TANK_SPAWN_INTERVAL)
 		{
-			m_shooterSpawnTimer++;
-			if (m_shooterSpawnTimer >= AppConst::ENEMY_SPAWN_INTERVAL)
-			{
-				m_shooterSpawnTimer = 0;
-				SpawnShooterEnemy();
-			}
+			m_tankSpawnTimer = 0;
+			SpawnTankEnemy();
 		}
 	}
 
-	// TankEnemy ウェーブのときだけスポーン
-	if (WaveManager::Instance().GetCurrentWave() == WaveType::Enemy3)
+	// Boss スポーン
+	if (wave.spawnBoss)
 	{
-		if (m_tankSpawnedCount < AppConst::TANK_MAX)
-		{
-			m_tankSpawnTimer++;
-			if (m_tankSpawnTimer >= AppConst::TANK_SPAWN_INTERVAL)
-			{
-				m_tankSpawnTimer = 0;
-				SpawnTankEnemy();
-			}
-		}
-	}
-
-	// Boss ウェーブのときスポーン（最初の1回だけ）
-	if (WaveManager::Instance().GetCurrentWave() == WaveType::Boss)
-	{
-		if (m_boss && !m_boss->IsAlive() && m_boss->GetPhase() != Boss::Phase::Death
-			&& m_boss->GetPhase() != Boss::Phase::EnterFromLeft)
+		if (m_boss && !m_boss->IsAlive() &&
+			m_boss->GetPhase() != Boss::Phase::Death &&
+			m_boss->GetPhase() != Boss::Phase::EnterFromLeft)
 		{
 			m_boss->Spawn();
 		}
@@ -277,6 +280,13 @@ void GameScene::Update()
 		CollisionManager::CheckDanmakuVsPlayer(danmakuBullets, m_player);
 	}
 
+	// 被弾時にシールド発動
+	if (HealthManager::Instance().WasDamaged())
+	{
+		HealthManager::Instance().ResetDamaged();
+		if (m_player) m_player->ActivateShield();
+	}
+
 	// MobEnemy が逃げたらウェーブカウントを進める
 	for (auto& e : m_Enemies)
 	{
@@ -285,7 +295,7 @@ void GameScene::Update()
 		if (!mob->IsEscaped()) continue;
 
 		mob->ResetEscaped();
-		WaveManager::Instance().OnEnemyDefeated();
+		WaveManager::Instance().OnEnemyDefeated(true, false, false, false);
 	}
 
 	EffectManager::Instance().Update();
@@ -304,44 +314,24 @@ void GameScene::Update()
 	bool nowN = GetAsyncKeyState('N') & 0x8000;
 	if (nowN && !prevN)
 	{
-		// 現在の全敵を消す
 		for (auto& e : m_Enemies)
 		{
 			if (e && e->IsAlive()) e->SetAlive(false);
 		}
-		if (m_boss && m_boss->IsAlive())
-		{
-			m_boss->SetAlive(false);
-		}
+		if (m_boss && m_boss->IsAlive()) m_boss->SetAlive(false);
 
-		// Y座標管理をリセット
 		m_usedY.fill(false);
 		m_usedY2.fill(false);
 
-		// 現在のウェーブの残り数を全部カウントして次へ
-		int killCount = 0;
-		switch (WaveManager::Instance().GetCurrentWave())
-		{
-		case WaveType::MobEnemy:
-			killCount = m_mobMax - WaveManager::Instance().GetDefeatedCount();
-			break;
-		case WaveType::Enemy2:
-			killCount = AppConst::SHOOTER_MAX - WaveManager::Instance().GetDefeatedCount();
-			break;
-		case WaveType::Enemy3:
-			killCount = AppConst::TANK_MAX - WaveManager::Instance().GetDefeatedCount();
-			break;
-		case WaveType::Boss:
-			killCount = 1 - WaveManager::Instance().GetDefeatedCount();
-			break;
-		default:
-			break;
-		}
+		const WaveData& wave = WaveManager::Instance().GetCurrentWave();
+		int mobLeft = wave.mobCount - WaveManager::Instance().GetMobDefeated();
+		int shooterLeft = wave.shooterCount - WaveManager::Instance().GetShooterDefeated();
+		int tankLeft = wave.tankCount - WaveManager::Instance().GetTankDefeated();
 
-		for (int i = 0; i < killCount; i++)
-		{
-			WaveManager::Instance().OnEnemyDefeated();
-		}
+		for (int i = 0; i < mobLeft; i++) WaveManager::Instance().OnEnemyDefeated(true, false, false, false);
+		for (int i = 0; i < shooterLeft; i++) WaveManager::Instance().OnEnemyDefeated(false, true, false, false);
+		for (int i = 0; i < tankLeft; i++) WaveManager::Instance().OnEnemyDefeated(false, false, true, false);
+		if (wave.spawnBoss)                   WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
 	}
 	prevN = nowN;
 
@@ -465,6 +455,8 @@ void GameScene::Draw()
 	// 体力バー
 	HealthManager::Instance().Draw();
 
+	m_bombUI.Draw(m_player ? m_player->GetBombStock() : 0);
+
 	// リザルトは最前面に描画
 	ResultManager::Instance().Draw();
 
@@ -503,5 +495,7 @@ void GameScene::Release()
 	ResultManager::Instance().Release();
 
 	EffectManager::Instance().Release();
+
+	m_bombUI.Release();
 
 }

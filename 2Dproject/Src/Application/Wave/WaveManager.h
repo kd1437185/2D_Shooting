@@ -1,35 +1,34 @@
 #pragma once
 
-// ウェーブの種類
-enum class WaveType
+struct WaveData
 {
-    MobEnemy,   // 雑魚敵
-    Enemy2,     // 敵2
-    Enemy3,     // 敵3
-    Boss,       // ボス
-    Clear       // 全ウェーブクリア
+    bool spawnMob = false;
+    bool spawnShooter = false;
+    bool spawnTank = false;
+    bool spawnBoss = false;
+    int  mobCount = 0;
+    int  shooterCount = 0;
+    int  tankCount = 0;
+    int  repeatCount = 1;  // このウェーブを何回繰り返すか
 };
 
 class WaveManager
 {
 public:
     void Init();
-
-    // 現在のウェーブを取得
-    WaveType GetCurrentWave() const { return m_currentWave; }
-
-    // 現在のウェーブの敵を全滅させたら次のウェーブへ
-    void OnEnemyDefeated();
-
-    // 現在のウェーブで倒した敵の数
-    int GetDefeatedCount() const { return m_defeatedCount; }
-
-    // 現在のウェーブがクリアされたか
-    bool IsWaveClear() const { return m_waveClear; }
-
+    void OnEnemyDefeated(bool _isMob, bool _isShooter, bool _isTank, bool _isBoss);
+    bool IsWaveClear()     const { return m_waveClear; }
     void ResetWaveClear() { m_waveClear = false; }
+    int  GetWaveIndex()    const { return m_waveIndex; }
+    int  GetRepeatCount()  const { return m_currentRepeat; }
 
-    int GetWaveIndex() const { return m_waveIndex; }
+    // 現在のウェーブ情報取得
+    const WaveData& GetCurrentWave() const { return WAVE_LIST[m_waveIndex]; }
+
+    // 現在のウェーブで各敵の残り倒す数
+    int GetMobDefeated()     const { return m_mobDefeated; }
+    int GetShooterDefeated() const { return m_shooterDefeated; }
+    int GetTankDefeated()    const { return m_tankDefeated; }
 
     // シングルトン
 private:
@@ -39,18 +38,19 @@ private:
     WaveManager& operator=(const WaveManager&) = delete;
 
     void NextWave();
+    bool CheckWaveClear() const;
 
-    WaveType m_currentWave = WaveType::MobEnemy;
-    int      m_defeatedCount = 0;
-    bool     m_waveClear = false;
+    static const int WAVE_COUNT = 7;
+    static const WaveData WAVE_LIST[WAVE_COUNT];
 
-    // ウェーブごとの撃破必要数
-    // MobEnemy→Enemy2→Enemy3→MobEnemy→Enemy2→Enemy3→Boss の順
-    static const int WAVE_ORDER_MAX = 7;
-    static const WaveType WAVE_ORDER[WAVE_ORDER_MAX];
-    static const int      WAVE_KILL_COUNT[WAVE_ORDER_MAX]; // 各ウェーブの撃破必要数
+    int  m_waveIndex = 0;
+    int  m_currentRepeat = 0;  // 現在の繰り返し回数
+    bool m_waveClear = false;
 
-    int m_waveIndex = 0; // 現在何番目のウェーブか
+    int  m_mobDefeated = 0;
+    int  m_shooterDefeated = 0;
+    int  m_tankDefeated = 0;
+    int  m_bossDefeated = 0;
 
 public:
     static WaveManager& Instance()

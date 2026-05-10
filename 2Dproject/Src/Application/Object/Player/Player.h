@@ -2,6 +2,7 @@
 
 #include "../BaseObject.h"
 #include "../../AppConst.h"
+#include "../../Effect/ShieldEffect.h"
 
 class Bullet;   // 前方宣言
 class HomingBullet;
@@ -36,6 +37,14 @@ public:
 	void StartEnter(); // 入場開始
 	bool IsEntering() const { return m_isEntering; }
 
+	bool IsShieldActive() const { return m_shield.IsActive(); }
+	void ActivateShield() { m_shield.Activate(); }
+
+	void  UseBomb();
+	int   GetBombStock() const { return m_bombStock; }
+	bool  IsBombing()    const { return m_shield.IsBombing(); }
+	float GetShieldRadius() const { return m_shield.GetCurrentRadius(); }
+
 private:
 
 	void Shot();
@@ -59,5 +68,9 @@ private:
 	int   m_animTimer = 0;
 	bool m_isEntering = false; // 入場中フラグ
 	int m_homingTimer = 0; // ホーミング弾の発射間隔タイマー
+	ShieldEffect m_shield;
+
+	int  m_bombStock = AppConst::BOMB_MAX;
+	bool m_prevX = false; // Xキー入力
 
 };

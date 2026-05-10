@@ -162,12 +162,12 @@ namespace AppConst
     static const float DANMAKU_BULLET_RADIUS = 8.0f; // 当たり判定（調整可）
     static const int   DANMAKU_SHOT_COUNT = 12;   // 1回の発射数（調整可）
     static const int   DANMAKU_INTERVAL = 30;   // 発射間隔（調整可）
-    static const float DANMAKU_ROTATE_SPEED = 1.5f; // 回転速度（度/フレーム・調整可）
+    static const float DANMAKU_ROTATE_SPEED = 3.5f; // 回転速度（度/フレーム・調整可）
     static const int   DANMAKU_COLOR_CHANGE = 5;    // 何回撃ったら色を変えるか（調整可）
 
     // ボス弾幕パターン別設定
     // パターン2：スパイラル
-    static const int   DANMAKU_SPIRAL_ARMS = 3;     // 腕の数（調整可）
+    static const int   DANMAKU_SPIRAL_ARMS = 6;     // 腕の数（調整可）
     static const float DANMAKU_SPIRAL_ROTATE = 3.0f;  // 回転速度（度/フレーム・調整可）
     static const int   DANMAKU_SPIRAL_INTERVAL = 12;     // 発射間隔（調整可）
 
@@ -179,11 +179,11 @@ namespace AppConst
     static const int   DANMAKU_WAVE_INTERVAL = 30;    // 発射間隔（調整可）
 
     // パターン4：展開弾
-    static const int   DANMAKU_EXPAND_COUNT = 12;    // 展開弾数（調整可）
+    static const int   DANMAKU_EXPAND_COUNT = 18;    // 展開弾数（調整可）
     static const float DANMAKU_EXPAND_SPEED = 1.5f;  // 展開速度（低速・調整可）
     static const float DANMAKU_EXPAND_RADIUS = 150.0f;// 展開半径（調整可）
     static const int   DANMAKU_EXPAND_STOP_TIME = 60;    // 停止時間（フレーム・調整可）
-    static const float DANMAKU_EXPAND_FAST_SPEED = 20.0f; // 高速発射速度（調整可）
+    static const float DANMAKU_EXPAND_FAST_SPEED = 26.0f; // 高速発射速度（調整可）
     static const int   DANMAKU_EXPAND_INTERVAL = 300;   // 全体の発射間隔（調整可）
 
     // 当たり判定の半径
@@ -207,15 +207,15 @@ namespace AppConst
     static const float MENU_START_Y = 200.0f; // メニューのY位置（調整可）
 
     // 体力ゲージ
-    static const int   HP_MAX = 3;
-    static const int   GAUGE_W = 64;
-    static const int   GAUGE_H = 7;
-    static const float GAUGE_SCALE = 1.0f;   // 2.0f → 1.0f（半分に）
-    static const float GAUGE_SCALED_W = 64.0f;  // 128.0f → 64.0f
-    static const float GAUGE_SCALED_H = 7.0f;   // 14.0f → 7.0f
+    static const int   HP_MAX = 5;      // 3 → 5
+    static const int   GAUGE_W = 16;     // 1コマの幅
+    static const int   GAUGE_H = 16;     // 1コマの高さ
+    static const float GAUGE_SCALE = 4.0f;   // 2倍
+    static const float GAUGE_SCALED_W = 32.0f; // 16 * 2
+    static const float GAUGE_SCALED_H = 32.0f; // 16 * 2
     static const float GAUGE_X = 50.0f;
-    static const float GAUGE_Y = 55.0f;
-    static const float GAUGE_SPACING = 70.0f;  // 間隔（GAUGE_SCALED_W より少し大きく）
+    static const float GAUGE_Y = 25.0f;
+    static const float GAUGE_SPACING = 36.0f;  // 間隔（調整可）
 
     // 背景スクロール
     static const int   BG_LAYER_COUNT = 6;     // 6
@@ -305,5 +305,28 @@ namespace AppConst
 
     // フェードアウト
     static const float FADE_SPEED = 0.05f; // フェード速度
+
+    // シールド
+    static const int   SHIELD_W = 265;
+    static const int   SHIELD_H = 265;
+    static const float SHIELD_SCALE = 0.5f;   // 拡大率（調整可）
+    static const float SHIELD_ALPHA = 0.8f;   // アルファ値（調整可）
+    static const int   SHIELD_ANIM_MAX = 60;
+    static const int   SHIELD_ANIM_COLS = 9;      // 横のコマ数
+    static const int   SHIELD_ANIM_SPEED = 2;      // アニメ速度（調整可）
+    static const int   SHIELD_DURATION = 180;    // シールド持続時間（2秒・調整可）
+    static const float SHIELD_RADIUS = 80.0f; // シールドの当たり判定半径
+
+    // ボム
+    static const int   BOMB_MAX = 3;      // 最大ストック数（調整可）
+    static const int   BOMB_EXPAND_FRAMES = 30;     // 拡大時間（0.5秒・調整可）
+    static const float BOMB_MAX_RADIUS = 900.0f; // 最大半径（画面全体・調整可）
+    static const float BOMB_SCALE_MAX = 12.0f;   // 最大スケール（調整可）
+    static const int   BOMB_W = 16;
+    static const int   BOMB_H = 16;
+    static const float BOMB_ICON_SCALE = 3.0f;   // アイコン拡大率（調整可）
+    static const float BOMB_ICON_X = 50.0f;  // 左下からのX位置（調整可）
+    static const float BOMB_ICON_Y = 80.0f;  // 左上からのY位置（調整可）
+    static const float BOMB_ICON_SPACING = 40.0f;  // アイコン間隔（調整可）
 
 }

@@ -25,6 +25,11 @@ void Player::Init()
         hb->Init();
         m_HomingBullets.push_back(hb);
     }
+
+    m_shield.Init();
+
+    m_bombStock = AppConst::BOMB_MAX;
+    m_prevX = false;
 }
 
 void Player::Update()
@@ -112,6 +117,15 @@ void Player::Update()
         m_shotTimer = AppConst::SHOT_INTERVAL;
     }
 
+    // XƒL[‚Åƒ{ƒ€”­“®
+    bool nowX = GetAsyncKeyState('X') & 0x8000;
+    if (nowX && !m_prevX && m_bombStock > 0 && !m_shield.IsBombing())
+    {
+        m_bombStock--;
+        m_shield.ActivateBomb();
+    }
+    m_prevX = nowX;
+
     for (auto& b : m_Bullets)
     {
         if (b) b->Update();
@@ -121,6 +135,8 @@ void Player::Update()
     {
         if (hb) hb->Update();
     }
+
+    m_shield.Update(m_pos);
 
     m_mat = Math::Matrix::CreateScale(
         m_direction * AppConst::PLAYER_SCALE,
@@ -140,6 +156,8 @@ void Player::Draw()
 
     SHADER.m_spriteShader.SetMatrix(m_mat);
     SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, 1.0f);
+
+    m_shield.Draw();
 
 	// ’e‚Ì•`‰æ
 	for (auto& b : m_Bullets)
@@ -169,6 +187,8 @@ void Player::Release()
         if (hb) hb->Release();
     }
     m_HomingBullets.clear();
+
+    m_shield.Release();
 
 }
 
