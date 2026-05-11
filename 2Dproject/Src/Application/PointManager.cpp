@@ -1,6 +1,7 @@
 #include "PointManager.h"
 #include "AppConst.h"
 #include "Score/ScoreManager.h"
+#include "Application/Sound/SoundManager.h"
 
 void PointManager::Init()
 {
@@ -29,6 +30,7 @@ void PointManager::Update(Math::Vector2 _playerPos)
         if (item->IsCollected())
         {
             ScoreManager::Instance().AddScore(item->GetValue());
+            SoundManager::Instance().PlayPointSE();
             item->Collect(); // フラグリセット
         }
     }

@@ -2,6 +2,7 @@
 #include "../AppConst.h"
 #include "../Score/ScoreManager.h"
 #include "../Scene/SceneManager.h"
+#include "../Sound/SoundManager.h"
 
 void ResultManager::Init()
 {
@@ -27,6 +28,7 @@ void ResultManager::Show(int _score)
     m_phase = Phase::ScoreAnim;
     m_scorePosY = AppConst::RESULT_SCORE_START_Y;
     m_scoreScale = AppConst::RESULT_SCORE_START_SCALE;
+    SoundManager::Instance().PlayResultSE();
 }
 
 void ResultManager::Update()

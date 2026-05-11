@@ -1,6 +1,7 @@
 #include "Boss.h"
 #include "../../../AppConst.h"
 #include "../../../Sound/SoundManager.h"
+#include "Application/Wave/WaveManager.h"
 
 void Boss::Init()
 {
@@ -282,6 +283,7 @@ void Boss::UpdateDeath()
                 // 左から来たボスを倒した → クリア
                 m_deathFinished = true;
                 m_aliveFlg = false;
+                WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
             else
             {

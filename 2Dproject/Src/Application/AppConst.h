@@ -281,7 +281,7 @@ namespace AppConst
     static const int   RESULT_BG_W = 676;
     static const int   RESULT_BG_H = 400;
     static const float RESULT_BG_ALPHA = 0.75f;
-    static const float RESULT_BG_Y = -30.0f;    // 背景のY座標（調整可）
+    static const float RESULT_BG_Y = -10.0f;    // 背景のY座標（調整可）
     static const int   RESULT_SELECT_W = 256;
     static const int   RESULT_SELECT_H = 64;
     static const float RESULT_SELECT_Y1 = -80.0f;  // BACK TITLE のY座標（調整可）
@@ -327,7 +327,7 @@ namespace AppConst
     static const float BOMB_ICON_SCALE = 3.0f;   // アイコン拡大率（調整可）
     static const float BOMB_ICON_X = 50.0f;  // 左下からのX位置（調整可）
     static const float BOMB_ICON_Y = 80.0f;  // 左上からのY位置（調整可）
-    static const float BOMB_ICON_SPACING = 40.0f;  // アイコン間隔（調整可）
+    static const float BOMB_ICON_SPACING = 50.0f;  // アイコン間隔（調整可）
 
     // バレットレベルUI
     static const int   BULLET_LEVEL_W = 250;
@@ -337,12 +337,15 @@ namespace AppConst
     static const float BULLET_LEVEL_Y = 10.0f; // 右上からのY位置（調整可）
 
     // 音量設定（0.0f〜1.0f）
-    static const float VOL_TITLE_BGM    = 0.5f;  // タイトルBGM（調整可）
-    static const float VOL_GAME_BGM     = 0.2f;  // ゲームBGM（調整可）
-    static const float VOL_BOSS_BGM     = 0.1f;  // ボスBGM（調整可）
-    static const float VOL_SHOT_SE      = 0.2f;  // 発射SE（調整可）
-    static const float VOL_BOMB_SE      = 0.8f;  // ボムSE（調整可）
-    static const float VOL_DAMAGE_SE    = 0.8f;  // 被弾SE（調整可）
+    static const float VOL_TITLE_BGM    = 0.6f;  // タイトルBGM（調整可）
+    static const float VOL_GAME_BGM     = 0.3f;  // ゲームBGM（調整可）
+    static const float VOL_BOSS_BGM     = 0.15f;  // ボスBGM（調整可）
+    static const float VOL_SHOT_SE      = 0.3f;  // 発射SE（調整可）
+    static const float VOL_BOMB_SE      = 0.9f;  // ボムSE（調整可）
+    static const float VOL_DAMAGE_SE    = 0.9f;  // 被弾SE（調整可）
+    static const float VOL_HIT_SE = 0.8f;  // 着弾SE（調整可）
+    static const float VOL_POINT_SE = 0.2f;  // ポイント回収SE（調整可）
+    static const float VOL_RESULT_SE = 0.4f;  // リザルトSE（調整可）
 
     // ポイントアイテム
     static const int   POINT_W = 24;

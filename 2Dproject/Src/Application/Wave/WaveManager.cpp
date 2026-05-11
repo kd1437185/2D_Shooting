@@ -53,12 +53,10 @@ void WaveManager::OnEnemyDefeated(bool _isMob, bool _isShooter, bool _isTank, bo
 void WaveManager::NextWave()
 {
     const WaveData& wave = WAVE_LIST[m_waveIndex];
-
     m_currentRepeat++;
 
     if (m_currentRepeat < wave.repeatCount)
     {
-        // まだ繰り返しが残っている → カウンターだけリセット
         m_mobDefeated = 0;
         m_shooterDefeated = 0;
         m_tankDefeated = 0;
@@ -67,12 +65,16 @@ void WaveManager::NextWave()
         return;
     }
 
-    // 次のウェーブへ
     m_currentRepeat = 0;
-    m_waveIndex++;
     m_mobDefeated = 0;
     m_shooterDefeated = 0;
     m_tankDefeated = 0;
     m_bossDefeated = 0;
-    m_waveClear = true;
+
+    // 最後のウェーブを超えないようにする
+    if (m_waveIndex < WAVE_COUNT - 1)
+    {
+        m_waveIndex++;
+        m_waveClear = true;
+    }
 }

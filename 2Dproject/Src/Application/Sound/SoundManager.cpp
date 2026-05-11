@@ -35,6 +35,21 @@ void SoundManager::Init()
     m_damageSEInst = m_damageSE->CreateInstance(false);
     m_damageSEInst->SetVolume(AppConst::VOL_DAMAGE_SE);
 
+    m_hitSE = std::make_shared<KdSoundEffect>();
+    m_hitSE->Load("Sound/SE/Explosion 8 - Sound effects Pack 2.wav");
+    m_hitSEInst = m_hitSE->CreateInstance(false);
+    m_hitSEInst->SetVolume(AppConst::VOL_HIT_SE);
+
+    m_pointSE = std::make_shared<KdSoundEffect>();
+    m_pointSE->Load("Sound/SE/1up 10 - Sound effects Pack 2.wav");
+    m_pointSEInst = m_pointSE->CreateInstance(false);
+    m_pointSEInst->SetVolume(AppConst::VOL_POINT_SE);
+
+    m_resultSE = std::make_shared<KdSoundEffect>();
+    m_resultSE->Load("Sound/SE/maou_game_jingle06.wav");
+    m_resultSEInst = m_resultSE->CreateInstance(false);
+    m_resultSEInst->SetVolume(AppConst::VOL_RESULT_SE);
+
 }
 
 void SoundManager::Release()
@@ -52,6 +67,13 @@ void SoundManager::Release()
     m_shotSE = nullptr;
     m_bombSE = nullptr;
     m_damageSE = nullptr;
+    m_hitSEInst = nullptr;
+    m_pointSEInst = nullptr;
+    m_resultSEInst = nullptr;
+    m_hitSE = nullptr;
+    m_pointSE = nullptr;
+    m_resultSE = nullptr;
+
 }
 
 void SoundManager::StopBGM()
@@ -104,6 +126,26 @@ void SoundManager::PlayDamageSE()
     m_damageSEInst->Play(false);
 }
 
+void SoundManager::PlayHitSE()
+{
+    m_hitSEInst->Stop();
+    m_hitSEInst->Play(false);
+}
+
+void SoundManager::PlayPointSE()
+{
+    if (!m_pointSEInst->IsPlay())
+    {
+        m_pointSEInst->Play(false);
+    }
+}
+
+void SoundManager::PlayResultSE()
+{
+    m_resultSEInst->Stop();
+    m_resultSEInst->Play(false);
+}
+
 void SoundManager::SetBGMVolume(float _vol)
 {
     m_bgmVol = _vol;
@@ -132,6 +174,9 @@ void SoundManager::ToggleMute()
         m_shotSEInst->SetVolume(0.0f);
         m_bombSEInst->SetVolume(0.0f);
         m_damageSEInst->SetVolume(0.0f);
+        m_hitSEInst->SetVolume(0.0f);
+        m_pointSEInst->SetVolume(0.0f);
+        m_resultSEInst->SetVolume(0.0f);
     }
     else
     {
@@ -142,5 +187,9 @@ void SoundManager::ToggleMute()
         m_shotSEInst->SetVolume(AppConst::VOL_SHOT_SE);
         m_bombSEInst->SetVolume(AppConst::VOL_BOMB_SE);
         m_damageSEInst->SetVolume(AppConst::VOL_DAMAGE_SE);
+        m_hitSEInst->SetVolume(AppConst::VOL_HIT_SE);
+        m_pointSEInst->SetVolume(AppConst::VOL_POINT_SE);
+        m_resultSEInst->SetVolume(AppConst::VOL_RESULT_SE);
+
     }
 }

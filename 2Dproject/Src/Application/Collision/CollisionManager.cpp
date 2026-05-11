@@ -14,6 +14,7 @@
 #include "../Object/Player/Player.h"
 #include "../Health/HealthManager.h"
 #include "../PointManager.h"
+#include "../Sound/SoundManager.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -51,6 +52,7 @@ void CollisionManager::CheckBulletsVsEnemies(
                 bullet->SetAlive(false);
                 enemy->Damage(bullet->GetDamage());
                 EffectManager::Instance().PlayHitEffect(bullet->GetPos());
+                SoundManager::Instance().PlayHitSE();
 
                 // フェードアウト開始 = 死亡
                 if (enemy->IsFading())
@@ -97,7 +99,6 @@ void CollisionManager::CheckBulletsVsBoss(
             {
                 // 死亡アニメ前にポイントをドロップ
                 PointManager::Instance().SpawnPoint(_boss->GetPos(), AppConst::SCORE_PER_BOSS);
-                WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
         }
     }
@@ -129,6 +130,7 @@ void CollisionManager::CheckHomingVsEnemies(
                 bullet->SetAlive(false);
                 enemy->Damage(bullet->GetDamage());
                 EffectManager::Instance().PlayHitEffect(bullet->GetPos());
+                SoundManager::Instance().PlayHitSE();
 
                 if (enemy->IsFading())
                 {
@@ -173,7 +175,6 @@ void CollisionManager::CheckHomingVsBoss(
             if (_boss->IsDead())
             {
                 PointManager::Instance().SpawnPoint(_boss->GetPos(), AppConst::SCORE_PER_BOSS);
-                WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
         }
     }
