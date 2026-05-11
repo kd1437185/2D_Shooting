@@ -44,6 +44,18 @@ public:
 	bool  IsBombing()    const { return m_shield.IsBombing(); }
 	float GetShieldRadius() const { return m_shield.GetCurrentRadius(); }
 
+	void SetBulletLevel(int _level)
+	{
+		m_bulletLevel = _level;
+		switch (_level)
+		{
+		case 2: m_bulletDamage = AppConst::BULLET_DAMAGE_LV2; break;
+		case 3: m_bulletDamage = AppConst::BULLET_DAMAGE_LV3; break;
+		case 4: m_bulletDamage = AppConst::BULLET_DAMAGE_LV4; break;
+		default: m_bulletDamage = AppConst::BULLET_DAMAGE_LV1; break;
+		}
+	}
+
 private:
 
 	void Shot();

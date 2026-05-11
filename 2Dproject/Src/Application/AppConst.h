@@ -133,10 +133,10 @@ namespace AppConst
     static const int   BULLET_MAX = 100; // 同時に出せる最大数
 
     // 弾のダメージ
-    static const int BULLET_DAMAGE_LV1 = 10;  // レベル1
-    static const int BULLET_DAMAGE_LV2 = 10;  // レベル2
-    static const int BULLET_DAMAGE_LV3 = 10;  // レベル3
-    static const int BULLET_DAMAGE_LV4 = 10; // レベル4（最大）
+    static const int BULLET_DAMAGE_LV1 = 20;  // レベル1
+    static const int BULLET_DAMAGE_LV2 = 20;  // レベル2
+    static const int BULLET_DAMAGE_LV3 = 20;  // レベル3
+    static const int BULLET_DAMAGE_LV4 = 30; // レベル4（最大）
 
     // 弾レベル設定
     static const float BULLET_LV2_OFFSET_Y = 20.0f;  // Lv2の上下オフセット（調整可）
@@ -275,7 +275,7 @@ namespace AppConst
     static const int MOB_HP = 60;
     static const int SHOOTER_HP = 120;
     static const int TANK_HP = 200;
-    static const int BOSS_HP = 8000;
+    static const int BOSS_HP = 3000;
 
     // リザルト
     static const int   RESULT_BG_W = 676;
@@ -330,11 +330,11 @@ namespace AppConst
     static const float BOMB_ICON_SPACING = 40.0f;  // アイコン間隔（調整可）
 
     // バレットレベルUI
-    static const int   BULLET_LEVEL_W = 200;
+    static const int   BULLET_LEVEL_W = 250;
     static const int   BULLET_LEVEL_H = 48;
     static const float BULLET_LEVEL_SCALE = 1.0f;  // 拡大率（調整可）
     static const float BULLET_LEVEL_X = 50.0f; // 右上からのX位置（調整可）
-    static const float BULLET_LEVEL_Y = 30.0f; // 右上からのY位置（調整可）
+    static const float BULLET_LEVEL_Y = 10.0f; // 右上からのY位置（調整可）
 
     // 音量設定（0.0f〜1.0f）
     static const float VOL_TITLE_BGM    = 0.5f;  // タイトルBGM（調整可）
@@ -343,5 +343,17 @@ namespace AppConst
     static const float VOL_SHOT_SE      = 0.2f;  // 発射SE（調整可）
     static const float VOL_BOMB_SE      = 0.8f;  // ボムSE（調整可）
     static const float VOL_DAMAGE_SE    = 0.8f;  // 被弾SE（調整可）
+
+    // ポイントアイテム
+    static const int   POINT_W = 24;
+    static const int   POINT_H = 24;
+    static const float POINT_SCALE = 1.0f;   // 調整可
+    static const float POINT_FALL_SPEED = 2.0f;   // 落下速度（調整可）
+    static const float POINT_COLLECT_DIST = 50.0f;  // 回収距離
+    static const float POINT_ATTRACT_SPEED = 30.0f;  // 吸い寄せ速度（調整可）
+    static const int   POINT_AUTO_COLLECT = 30;    // 自動回収までの時間（2秒）
+    static const float POINT_MIN_Y = -(SCREEN_HALF_H - 20.0f); // 画面下限
+    static const int   POINT_MAX = 50;     // 同時出現最大数
+    static const float POINT_ALPHA = 0.5f; // アルファ値
 
 }

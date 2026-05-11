@@ -119,3 +119,28 @@ void SoundManager::SetSEVolume(float _vol)
     m_bombSEInst->SetVolume(m_seVol);
     m_damageSEInst->SetVolume(m_seVol);
 }
+
+void SoundManager::ToggleMute()
+{
+    m_isMuted = !m_isMuted;
+
+    if (m_isMuted)
+    {
+        m_titleBGMInst->SetVolume(0.0f);
+        m_gameBGMInst->SetVolume(0.0f);
+        m_bossBGMInst->SetVolume(0.0f);
+        m_shotSEInst->SetVolume(0.0f);
+        m_bombSEInst->SetVolume(0.0f);
+        m_damageSEInst->SetVolume(0.0f);
+    }
+    else
+    {
+        // Œ³‚Ì‰¹—Ê‚É–ß‚·
+        m_titleBGMInst->SetVolume(AppConst::VOL_TITLE_BGM);
+        m_gameBGMInst->SetVolume(AppConst::VOL_GAME_BGM);
+        m_bossBGMInst->SetVolume(AppConst::VOL_BOSS_BGM);
+        m_shotSEInst->SetVolume(AppConst::VOL_SHOT_SE);
+        m_bombSEInst->SetVolume(AppConst::VOL_BOMB_SE);
+        m_damageSEInst->SetVolume(AppConst::VOL_DAMAGE_SE);
+    }
+}

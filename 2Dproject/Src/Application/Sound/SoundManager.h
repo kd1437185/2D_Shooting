@@ -21,6 +21,9 @@ public:
     void SetBGMVolume(float _vol);
     void SetSEVolume(float _vol);
 
+    void ToggleMute();
+
+
     // シングルトン
 private:
     SoundManager() {}
@@ -46,6 +49,7 @@ private:
 
     float m_bgmVol = 0.5f;
     float m_seVol = 0.8f;
+    bool m_isMuted = false;
 
     // 現在再生中のBGMインスタンス
     std::shared_ptr<KdSoundInstance> m_currentBGMInst = nullptr;

@@ -14,6 +14,7 @@
 #include "../../Result/ResultManager.h"
 #include "../../Effect/EffectManager.h"
 #include "../../Sound/SoundManager.h"
+#include "Application/PointManager.h"
 
 void GameScene::Init()
 {
@@ -86,6 +87,8 @@ void GameScene::Init()
 
 	EffectManager::Instance().Init();
 
+	PointManager::Instance().Init();
+
 	m_bombUI.Init();
 
 	m_bulletLevelUI.Init();
@@ -113,10 +116,20 @@ void GameScene::Update()
 		return;
 	}
 
+	
+
 	// ウェーブクリア確認
 	if (WaveManager::Instance().IsWaveClear())
 	{
 		WaveManager::Instance().ResetWaveClear();
+
+		int waveIndex = WaveManager::Instance().GetWaveIndex();
+		if (m_player)
+		{
+			if (waveIndex == 3)      m_player->SetBulletLevel(2);
+			else if (waveIndex == 5) m_player->SetBulletLevel(3);
+			else if (waveIndex == 6) m_player->SetBulletLevel(4);
+		}
 
 		const WaveData& wave = WaveManager::Instance().GetCurrentWave();
 
@@ -216,8 +229,22 @@ void GameScene::Update()
 		return;
 	}
 
+	// 1秒ごとにスコア加算
+	/*static int scoreTimer = 0;
+	scoreTimer++;
+	if (scoreTimer >= 60)
+	{
+		scoreTimer = 0;
+		ScoreManager::Instance().AddScore(100);
+	}*/
+
 	// プレイヤー
 	if (m_player) m_player->Update();
+
+	if (m_player)
+	{
+		PointManager::Instance().Update(m_player->GetPos());
+	}
 
 	// プレイヤー位置を更新（敵弾の目標位置として使用）
 	if (m_player) m_playerPos = m_player->GetPos();
@@ -340,6 +367,14 @@ void GameScene::Update()
 	}
 	prevN = nowN;
 
+	static bool prevQ = false;
+	bool nowQ = GetAsyncKeyState('Q') & 0x8000;
+	if (nowQ && !prevQ)
+	{
+		SoundManager::Instance().ToggleMute();
+	}
+	prevQ = nowQ;
+
 }
 
 void GameScene::SpawnEnemy()
@@ -430,6 +465,8 @@ void GameScene::Draw()
 		if(e && (e->IsAlive() || e->IsFading())) e->Draw();
 	}
 
+	PointManager::Instance().Draw();
+
 	// プレイヤー
 	if (m_player)
 	{
@@ -506,5 +543,7 @@ void GameScene::Release()
 	m_bombUI.Release();
 
 	m_bulletLevelUI.Release();
+
+	PointManager::Instance().Release();
 
 }

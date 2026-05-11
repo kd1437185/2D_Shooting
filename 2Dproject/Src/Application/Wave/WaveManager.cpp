@@ -8,9 +8,9 @@ const WaveData WaveManager::WAVE_LIST[WAVE_COUNT] =
     { true,  false, false, false, AppConst::MOB_MAX_WAVE1, 0,                      0,                   1 }, // フェーズ1: MobEnemy
     { false, true,  false, false, 0,                       AppConst::SHOOTER_MAX,  0,                   1 }, // フェーズ2: ShooterEnemy
     { false, false, true,  false, 0,                       0,                      AppConst::TANK_MAX,  1 }, // フェーズ3: TankEnemy
-    { true,  false, false, false, AppConst::MOB_MAX_WAVE4, AppConst::SHOOTER_MAX,  0,                   2 }, // フェーズ4: MobEnemy
-    { false, true,  true,  false, 0,                       AppConst::SHOOTER_MAX,  AppConst::TANK_MAX,  2 }, // フェーズ5: ShooterEnemy + TankEnemy同時
-    { true,  true,  true,  false, AppConst::MOB_MAX_WAVE4, AppConst::SHOOTER_MAX,  AppConst::TANK_MAX,  2 }, // フェーズ6: TankEnemy x2回
+    { true,  false, false, false, AppConst::MOB_MAX_WAVE4, AppConst::SHOOTER_MAX,  0,                   1 }, // フェーズ4: MobEnemy
+    { true,  true,  true,  false, AppConst::MOB_MAX_WAVE4, AppConst::SHOOTER_MAX,  AppConst::TANK_MAX,  1 }, // フェーズ5: ShooterEnemy + TankEnemy同時
+    { true,  true,  true,  false, AppConst::MOB_MAX_WAVE4, AppConst::SHOOTER_MAX,  AppConst::TANK_MAX,  1 }, // フェーズ6: TankEnemy x2回
     { false, false, false, true,  0,                       0,                      0,                   1 }, // フェーズ7: Boss
 };
 

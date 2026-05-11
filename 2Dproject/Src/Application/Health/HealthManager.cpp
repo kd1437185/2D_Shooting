@@ -15,7 +15,7 @@ void HealthManager::Release()
 
 void HealthManager::Damage()
 {
-    if (m_hp > 0)
+    if (m_hp > 1)
     {
         m_hp--;
         m_wasDamaged = true;

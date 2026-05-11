@@ -257,7 +257,7 @@ void Application::Execute()
 
 			// ‚±‚±‚Åuã‘‚«v‚·‚éI
 			char title[256];
-			sprintf_s(title, "RustFaily %d FPS", m_fps);
+			sprintf_s(title, "RustFairy %d FPS", m_fps);
 			SetWindowTextA(m_window.GetWndHandle(), title);
 		}
 

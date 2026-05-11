@@ -13,6 +13,7 @@
 #include "../Effect/EffectManager.h"
 #include "../Object/Player/Player.h"
 #include "../Health/HealthManager.h"
+#include "../PointManager.h"
 
 bool CollisionManager::CircleCollision(
     const Math::Vector2& _posA, float _radiusA,
@@ -58,12 +59,13 @@ void CollisionManager::CheckBulletsVsEnemies(
                     bool isShooter = (std::dynamic_pointer_cast<ShooterEnemy>(enemy) != nullptr);
                     bool isTank = (std::dynamic_pointer_cast<TankEnemy>(enemy) != nullptr);
 
-                    if (isShooter)
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                    else if (isTank)
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
-                    else
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+                    int score = 0;
+                    if (isShooter)      score = AppConst::SCORE_PER_SHOOTER;
+                    else if (isTank)    score = AppConst::SCORE_PER_TANK;
+                    else                score = AppConst::SCORE_PER_ENEMY;
+
+                    // スコア直接加算の代わりにポイントをドロップ
+                    PointManager::Instance().SpawnPoint(enemy->GetPos(), score);
 
                     WaveManager::Instance().OnEnemyDefeated(isMob, isShooter, isTank, false);
                 }
@@ -93,7 +95,8 @@ void CollisionManager::CheckBulletsVsBoss(
 
             if (_boss->IsDead())
             {
-                ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
+                // 死亡アニメ前にポイントをドロップ
+                PointManager::Instance().SpawnPoint(_boss->GetPos(), AppConst::SCORE_PER_BOSS);
                 WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
         }
@@ -133,12 +136,13 @@ void CollisionManager::CheckHomingVsEnemies(
                     bool isShooter = (std::dynamic_pointer_cast<ShooterEnemy>(enemy) != nullptr);
                     bool isTank = (std::dynamic_pointer_cast<TankEnemy>(enemy) != nullptr);
 
-                    if (isShooter)
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_SHOOTER);
-                    else if (isTank)
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_TANK);
-                    else
-                        ScoreManager::Instance().AddScore(AppConst::SCORE_PER_ENEMY);
+                    int score = 0;
+                    if (isShooter)      score = AppConst::SCORE_PER_SHOOTER;
+                    else if (isTank)    score = AppConst::SCORE_PER_TANK;
+                    else                score = AppConst::SCORE_PER_ENEMY;
+
+                    // スコア直接加算の代わりにポイントをドロップ
+                    PointManager::Instance().SpawnPoint(enemy->GetPos(), score);
 
                     WaveManager::Instance().OnEnemyDefeated(isMob, isShooter, isTank, false);
                 }
@@ -168,7 +172,8 @@ void CollisionManager::CheckHomingVsBoss(
 
             if (_boss->IsDead())
             {
-                ScoreManager::Instance().AddScore(AppConst::SCORE_PER_BOSS);
+                PointManager::Instance().SpawnPoint(_boss->GetPos(), AppConst::SCORE_PER_BOSS);
+                WaveManager::Instance().OnEnemyDefeated(false, false, false, true);
             }
         }
     }
