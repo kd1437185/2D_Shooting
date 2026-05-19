@@ -26,13 +26,19 @@ void EnemyBullet::Fire(Math::Vector2 _startPos, Math::Vector2 _targetPos)
     float dx = _targetPos.x - _startPos.x;
     float dy = _targetPos.y - _startPos.y;
     float len = sqrtf(dx * dx + dy * dy);
+
     if (len > 0.0f)
     {
         m_velX = (dx / len) * AppConst::ENEMY_BULLET_SPEED;
         m_velY = (dy / len) * AppConst::ENEMY_BULLET_SPEED;
     }
+    else
+    {
+        // 座標が完全一致した場合は左方向に発射
+        m_velX = -AppConst::ENEMY_BULLET_SPEED;
+        m_velY = 0.0f;
+    }
 
-    // 発射直後に行列を更新
     m_mat = Math::Matrix::CreateScale(
         AppConst::ENEMY_BULLET_SCALE, AppConst::ENEMY_BULLET_SCALE, 1.0f)
         * Math::Matrix::CreateTranslation(m_pos.x, m_pos.y, 0);

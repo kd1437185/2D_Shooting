@@ -50,6 +50,10 @@ void SoundManager::Init()
     m_resultSEInst = m_resultSE->CreateInstance(false);
     m_resultSEInst->SetVolume(AppConst::VOL_RESULT_SE);
 
+    m_gameOverSE = std::make_shared<KdSoundEffect>();
+    m_gameOverSE->Load("Sound/SE/maou_game_jingle07_1.wav");
+    m_gameOverSEInst = m_gameOverSE->CreateInstance(false);
+    m_gameOverSEInst->SetVolume(AppConst::VOL_GAMEOVER_SE);
 }
 
 void SoundManager::Release()
@@ -73,6 +77,8 @@ void SoundManager::Release()
     m_hitSE = nullptr;
     m_pointSE = nullptr;
     m_resultSE = nullptr;
+    m_gameOverSEInst = nullptr;
+    m_gameOverSE = nullptr;
 
 }
 
@@ -160,6 +166,12 @@ void SoundManager::SetSEVolume(float _vol)
     m_shotSEInst->SetVolume(m_seVol);
     m_bombSEInst->SetVolume(m_seVol);
     m_damageSEInst->SetVolume(m_seVol);
+}
+
+void SoundManager::PlayGameOverSE()
+{
+    m_gameOverSEInst->Stop();
+    m_gameOverSEInst->Play(false);
 }
 
 void SoundManager::ToggleMute()

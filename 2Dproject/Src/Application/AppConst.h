@@ -76,7 +76,7 @@ namespace AppConst
     static const float SHOOTER_FLOAT_RANGE = 80.0f;
     static const int   SHOOTER_MAX         = 2;
     static const float SHOOTER_RADIUS      = SHOOTER_SCALED_W / 2.0f;  // 32.0f
-    static const int   SCORE_PER_SHOOTER   = 300;
+    static const int   SCORE_PER_SHOOTER   = 3200;
 
     // ShooterEnemy 改造版
     static const float SHOOTER_ENTER_X = 450.0f;  // 停止X座標（調整可）
@@ -100,7 +100,7 @@ namespace AppConst
     static const float TANK_RISE_AMOUNT    = 60.0f;   // 上昇量
     static const int   TANK_MAX            = 3;
     static const float TANK_RADIUS         = 32.0f;
-    static const int   SCORE_PER_TANK      = 500;
+    static const int   SCORE_PER_TANK      = 4500;
     static const int   TANK_SPAWN_INTERVAL = 30;     // 0.5秒
 
     // TankEnemy の固定X座標
@@ -128,7 +128,7 @@ namespace AppConst
     static const float BULLET_SCALED_W = 121.5f; // 243 * 0.5
     static const int   BULLET_SIZE = 20;
     static const float BULLET_RADIUS = 10.0f;
-    static const float BULLET_ALPHA = 0.2f; // アルファ値
+    static const float BULLET_ALPHA = 0.4f; // アルファ値
     static const float BULLET_SPEED = 20.0f;
     static const int   BULLET_MAX = 100; // 同時に出せる最大数
 
@@ -148,7 +148,7 @@ namespace AppConst
     static const int   HOMING_ANIM_MAX = 8;
     static const int   HOMING_ANIM_SPEED = 3;     // アニメ速度（調整可）
     static const float HOMING_SCALE = 2.0f;  // 倍率（調整可）
-    static const float HOMING_ALPHA = 0.2f;  // アルファ値（調整可）
+    static const float HOMING_ALPHA = 0.4f;  // アルファ値（調整可）
     static const float HOMING_SPEED = 15.0f;  // 速度（調整可）
     static const float HOMING_TURN_SPEED = 0.08f; // 旋回速度（調整可）
     static const int   HOMING_MAX = 20;
@@ -193,7 +193,7 @@ namespace AppConst
     // スコア
     static const int   SCORE_MAX = 9999999;
     static const int   SCORE_DIGITS = 7;
-    static const int   SCORE_PER_ENEMY = 100;
+    static const int   SCORE_PER_ENEMY = 1500;
     static const int   NUMBER_W = 30;
     static const int   NUMBER_H = 30;
     static const float SCORE_X = (SCREEN_W / 2.0f) - (NUMBER_W * SCORE_DIGITS / 2.0f); // 中央揃え
@@ -243,9 +243,10 @@ namespace AppConst
     static const int   BOSS_ANIM_SPEED = 6;
     static const float BOSS_ENTER_SPEED = 2.0f; // 入場速度（ゆっくり）
     static const float BOSS_STOP_X = 400.0f;
+    static const float BOSS_STOP_X_LEFT = 400.0f; // 左から来たボスの停止X
     static const float BOSS_STOP_Y = 0.0f;
     static const float BOSS_SPAWN_X = SCREEN_HALF_W + BOSS_W; // 640 + 359 = 999.0f
-    static const int   SCORE_PER_BOSS = 10000;
+    static const int   SCORE_PER_BOSS = 30000;
     static const int   BOSS_IDLE_AFTER_ANIM_MAX = 10;  // 戦闘待機
     static const int   BOSS_H_AFTER = 265; // 戦闘形態の高さ
     static const float BOSS_RADIUS = 150.0f; // 当たり判定半径
@@ -298,7 +299,7 @@ namespace AppConst
     static const int   HIT_W = 355;
     static const int   HIT_H = 365;
     static const float HIT_SCALE = 0.4f;  // 拡大倍率（調整可）
-    static const float HIT_ALPHA = 0.1f;  // アルファ値（調整可）
+    static const float HIT_ALPHA = 0.4f;  // アルファ値（調整可）
     static const int   HIT_ANIM_MAX = 60;    // 総コマ数
     static const int   HIT_ANIM_COLS = 10;    // 横のコマ数
     static const int   HIT_ANIM_SPEED = 1;     // アニメ速度（調整可）
@@ -346,6 +347,7 @@ namespace AppConst
     static const float VOL_HIT_SE = 0.8f;  // 着弾SE（調整可）
     static const float VOL_POINT_SE = 0.2f;  // ポイント回収SE（調整可）
     static const float VOL_RESULT_SE = 0.4f;  // リザルトSE（調整可）
+    static const float VOL_GAMEOVER_SE = 0.8f; // ゲームオーバーSE（調整可）
 
     // ポイントアイテム
     static const int   POINT_W = 24;
@@ -358,5 +360,10 @@ namespace AppConst
     static const float POINT_MIN_Y = -(SCREEN_HALF_H - 20.0f); // 画面下限
     static const int   POINT_MAX = 50;     // 同時出現最大数
     static const float POINT_ALPHA = 0.5f; // アルファ値
+
+    // プレイヤー死亡演出
+    static const float PLAYER_DEATH_FALL_SPEED = 3.0f;  // 落下速度（調整可）
+    static const float PLAYER_DEATH_FADE_SPEED = 0.02f; // フェード速度（調整可）
+    static const int   PLAYER_DEATH_DELAY = 120;   // 死亡後リザルトまでの待機時間
 
 }

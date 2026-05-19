@@ -11,6 +11,9 @@ public:
     void Show(int _score);
     bool IsActive() const { return m_isActive; }
 
+    void ShowGameOver(int _score); // ゲームオーバー時
+    bool IsGameOver() const { return m_isGameOver; }
+
     // シングルトン
 private:
     ResultManager() {}
@@ -42,6 +45,8 @@ private:
     float m_scoreScale = 1.0f;
 
     bool m_prevEnter = false;
+
+    bool m_isGameOver = false;
 
 public:
     static ResultManager& Instance()

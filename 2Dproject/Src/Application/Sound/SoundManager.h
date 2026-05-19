@@ -19,6 +19,7 @@ public:
     void PlayHitSE();
     void PlayPointSE();
     void PlayResultSE();
+    void PlayGameOverSE();
 
     // âπó ê›íË
     void SetBGMVolume(float _vol);
@@ -55,6 +56,8 @@ private:
     std::shared_ptr<KdSoundInstance> m_pointSEInst;
     std::shared_ptr<KdSoundEffect>   m_resultSE;
     std::shared_ptr<KdSoundInstance> m_resultSEInst;
+    std::shared_ptr<KdSoundEffect>   m_gameOverSE;
+    std::shared_ptr<KdSoundInstance> m_gameOverSEInst;
 
     float m_bgmVol = 0.5f;
     float m_seVol = 0.8f;

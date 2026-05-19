@@ -37,6 +37,36 @@ void Player::Update()
 {
     // アニメーション更新
     m_animTimer++;
+
+    // 死亡演出中
+    if (m_isDying)
+    {
+        // 下に落下
+        m_pos.y -= AppConst::PLAYER_DEATH_FALL_SPEED;
+
+        // フェードアウト
+        m_deathAlpha -= AppConst::PLAYER_DEATH_FADE_SPEED;
+        if (m_deathAlpha < 0.0f) m_deathAlpha = 0.0f;
+
+        // 一定時間後に死亡完了
+        m_deathTimer++;
+        if (m_deathTimer >= AppConst::PLAYER_DEATH_DELAY)
+        {
+            m_isDying = false;
+            m_deathFinished = true;
+            m_aliveFlg = false;
+        }
+
+        // 行列更新
+        m_mat = Math::Matrix::CreateScale(
+            m_direction * AppConst::PLAYER_SCALE,
+            AppConst::PLAYER_SCALE, 1.0f)
+            * Math::Matrix::CreateTranslation(m_pos.x, m_pos.y, 0);
+        return;
+    }
+
+    m_shield.Update(m_pos);
+
     if (m_animTimer >= AppConst::PLAYER_ANIM_SPEED)
     {
         m_animTimer = 0;
@@ -138,7 +168,7 @@ void Player::Update()
         if (hb) hb->Update();
     }
 
-    m_shield.Update(m_pos);
+    
 
     m_mat = Math::Matrix::CreateScale(
         m_direction * AppConst::PLAYER_SCALE,
@@ -148,6 +178,8 @@ void Player::Update()
 
 void Player::Draw()
 {
+    float alpha = m_isDying ? m_deathAlpha : 1.0f;
+
     Math::Rectangle srcRect =
     {
         m_animFrame * AppConst::PLAYER_W,
@@ -157,16 +189,14 @@ void Player::Draw()
     };
 
     SHADER.m_spriteShader.SetMatrix(m_mat);
-    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, 1.0f);
+    SHADER.m_spriteShader.DrawTex(&m_tex, srcRect, alpha);
 
-    m_shield.Draw();
+    if (!m_isDying) m_shield.Draw();
 
-	// 弾の描画
-	for (auto& b : m_Bullets)
-	{
-		if (b) b->Draw();
-	}
-
+    for (auto& b : m_Bullets)
+    {
+        if (b) b->Draw();
+    }
     for (auto& hb : m_HomingBullets)
     {
         if (hb) hb->Draw();
@@ -307,4 +337,12 @@ void Player::StartEnter()
 {
     m_pos = { AppConst::PLAYER_ENTER_START_X, 0.0f };
     m_isEntering = true;
+}
+
+void Player::TriggerDeath()
+{
+    m_isDying = true;
+    m_deathFinished = false;
+    m_deathAlpha = 1.0f;
+    m_deathTimer = 0;
 }

@@ -28,7 +28,12 @@ void ResultManager::Show(int _score)
     m_phase = Phase::ScoreAnim;
     m_scorePosY = AppConst::RESULT_SCORE_START_Y;
     m_scoreScale = AppConst::RESULT_SCORE_START_SCALE;
-    SoundManager::Instance().PlayResultSE();
+
+    // クリア時のみリザルト音を鳴らす
+    if (!m_isGameOver)
+    {
+        SoundManager::Instance().PlayResultSE();
+    }
 }
 
 void ResultManager::Update()
@@ -112,4 +117,11 @@ void ResultManager::Draw()
                 Math::Rectangle{ 0, 0, AppConst::RESULT_SELECT_W, AppConst::RESULT_SELECT_H }, 1.0f);
         }
     }
+}
+
+void ResultManager::ShowGameOver(int _score)
+{
+    m_isGameOver = true;
+    Show(_score); // 既存のShow処理を使う
+    // リザルト音の代わりにゲームオーバー音は SoundManager 側で鳴らす
 }

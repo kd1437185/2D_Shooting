@@ -56,6 +56,10 @@ public:
 		}
 	}
 
+	void TriggerDeath();           // 死亡トリガー
+	bool IsDying()   const { return m_isDying; }
+	bool IsDeathFinished() const { return m_deathFinished; }
+
 private:
 
 	void Shot();
@@ -83,5 +87,10 @@ private:
 
 	int  m_bombStock = AppConst::BOMB_MAX;
 	bool m_prevX = false; // Xキー入力
+
+	bool  m_isDying = false;
+	bool  m_deathFinished = false;
+	float m_deathAlpha = 1.0f;
+	int   m_deathTimer = 0;
 
 };

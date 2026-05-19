@@ -15,11 +15,16 @@ void HealthManager::Release()
 
 void HealthManager::Damage()
 {
-    if (m_hp > 1)
+    if (m_hp > 0)
     {
         m_hp--;
-        m_wasDamaged = true;
-        SoundManager::Instance().PlayDamageSE();    // 被弾時の音
+
+        if (m_hp > 0)
+        {
+            // HP が残っているときだけシールド発動・SE再生
+            m_wasDamaged = true;
+            SoundManager::Instance().PlayDamageSE();
+        }
     }
 }
 

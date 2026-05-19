@@ -208,6 +208,23 @@ void GameScene::Update()
 		m_boss->Update();
 	}
 
+	// プレイヤー死亡チェック
+	if (m_player && !m_player->IsDying() && !m_player->IsDeathFinished())
+	{
+		if (HealthManager::Instance().IsDead())
+		{
+			m_player->TriggerDeath();
+			SoundManager::Instance().StopBGM();
+			SoundManager::Instance().PlayGameOverSE(); // 後述
+		}
+	}
+
+	// 死亡演出完了でリザルト表示（1回だけ）
+	if (m_player && m_player->IsDeathFinished() && !ResultManager::Instance().IsActive())
+	{
+		ResultManager::Instance().ShowGameOver(ScoreManager::Instance().GetScore());
+	}
+
 	// 左から来たボスの死亡アニメ完了でリザルト表示
 	if (m_boss && m_boss->IsDeathFinished() && m_boss->IsFromLeft())
 	{
@@ -228,15 +245,6 @@ void GameScene::Update()
 		ResultManager::Instance().Update();
 		return;
 	}
-
-	// 1秒ごとにスコア加算
-	/*static int scoreTimer = 0;
-	scoreTimer++;
-	if (scoreTimer >= 60)
-	{
-		scoreTimer = 0;
-		ScoreManager::Instance().AddScore(100);
-	}*/
 
 	// プレイヤー
 	if (m_player) m_player->Update();
@@ -274,39 +282,45 @@ void GameScene::Update()
 		if (e->IsAlive()) e->Update();
 	}
 
+	// 死亡中・死亡完了後は当たり判定しない
+	bool playerAlive = m_player && !m_player->IsDying() && !m_player->IsDeathFinished();
+
 	// 当たり判定
-	if (m_player)
+	if (playerAlive)
 	{
 		auto& bullets = m_player->GetBullets();
 		CollisionManager::CheckBulletsVsEnemies(bullets, m_Enemies);
 	}
 
 	// 当たり判定（弾 vs ボス）
-	if (m_player && m_boss)
+	if (playerAlive && m_boss)
 	{
 		auto& bullets = m_player->GetBullets();
 		CollisionManager::CheckBulletsVsBoss(bullets, m_boss);
 	}
 
 	// 当たり判定（ホーミング弾 vs 敵）
-	if (m_player)
+	if (playerAlive)
 	{
 		auto& homings = m_player->GetHomingBullets();
 		CollisionManager::CheckHomingVsEnemies(homings, m_Enemies);
 	}
 
 	// 当たり判定（ホーミング弾 vs ボス）
-	if (m_player && m_boss)
+	if (playerAlive && m_boss)
 	{
 		auto& homings = m_player->GetHomingBullets();
 		CollisionManager::CheckHomingVsBoss(homings, m_boss);
 	}
 
 	// 敵弾 vs プレイヤー
-	CollisionManager::CheckEnemyBulletsVsPlayer(m_Enemies, m_player);
+	if (playerAlive)
+	{
+		CollisionManager::CheckEnemyBulletsVsPlayer(m_Enemies, m_player);
+	}
 
 	// 弾幕 vs プレイヤー
-	if (m_boss && m_player)
+	if (playerAlive && m_boss)
 	{
 		auto& danmakuBullets = m_boss->GetDanmakuBullets();
 		CollisionManager::CheckDanmakuVsPlayer(danmakuBullets, m_player);

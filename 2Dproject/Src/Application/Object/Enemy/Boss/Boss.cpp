@@ -310,12 +310,11 @@ void Boss::UpdateEnterFromLeft()
 
     m_pos.x += AppConst::BOSS_ENTER_SPEED;
 
-    if (m_pos.x >= -AppConst::BOSS_STOP_X)
+    if (m_pos.x >= -AppConst::BOSS_STOP_X_LEFT)
     {
-        m_pos.x = -AppConst::BOSS_STOP_X;
+        m_pos.x = -AppConst::BOSS_STOP_X_LEFT;
         m_animFrame = 0;
         m_animTimer = 0;
-        // m_fromLeft = false ÇÕçÌèúÅIç∂Ç©ÇÁìoèÍå„Ç‡ÇªÇÃÇ‹Ç‹
         m_phase = Phase::IdleBefore;
     }
 }

@@ -15,6 +15,9 @@ void DanmakuBullet::Fire(Math::Vector2 _startPos, float _angleRad, bool _isOrang
     m_isOrange = _isOrange;
     m_velX = cosf(_angleRad) * AppConst::DANMAKU_BULLET_SPEED;
     m_velY = sinf(_angleRad) * AppConst::DANMAKU_BULLET_SPEED;
+    m_isExpand = false;  // 追加：展開モードをリセット
+    m_expandPhase = ExpandPhase::Expand; // 追加
+    m_stopTimer = 0;      // 追加
 
     m_mat = Math::Matrix::CreateTranslation(m_pos.x, m_pos.y, 0);
 }
